@@ -276,7 +276,8 @@
             const unlock = parseInt(urlParams.get('unlock'));
             const uuid = urlParams.get('uuid');
 
-            if (lat && lng && unlock && uuid) {
+            // Explicit null check is safer for query params
+            if (lat !== null && lng !== null && !isNaN(unlock) && uuid !== null) {
                 await handleReceive(parseFloat(lat), parseFloat(lng), unlock, uuid);
             } else {
                 renderNav();
@@ -432,10 +433,9 @@
         };
 
         const generateQR = (lat, lng, chapter) => {
-            const url = new URL(window.location.href);
-            // Clear any existing query params so we don't chain them
-            url.search = '';
-            url.hash = '';
+            // Reconstruct absolute URL to prevent trailing slash/hash issues on varied static hosts like GH Pages
+            const baseUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            const url = new URL(baseUrl);
 
             // Build strictly encoded payload
             url.searchParams.set('lat', lat.toString());
