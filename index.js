@@ -5,9 +5,10 @@
  */
 let currentChapter = 1;
 let selectedBook = null;
-let unlockedChapters = {}; 
+let unlockedChapters = {};
 let myUUID = null;
-let receivedSources = {};
+// let receivedSources = {};
+let receivedSources = [];
 let sessionLocation = null;
 
 const DATA_KEY = `proximitetext_data_v2`;
@@ -43,11 +44,15 @@ const loadState = () => {
     if (savedSources) {
         try {
             receivedSources = JSON.parse(savedSources);
+            // Fallback for transition
+            if (!Array.isArray(receivedSources)) receivedSources = [];
         } catch (e) {
-            receivedSources = {};
+            // receivedSources = {};
+            receivedSources = [];
         }
     } else {
-        receivedSources = {};
+        // receivedSources = {};
+        receivedSources = [];
     }
 };
 
@@ -59,9 +64,9 @@ const saveState = () => {
 const initBookStorage = (bookName) => {
     if (!unlockedChapters[bookName]) unlockedChapters[bookName] = [1];
     if (!unlockedChapters[bookName].includes(1)) unlockedChapters[bookName].push(1);
-    
-    if (!receivedSources[bookName]) receivedSources[bookName] = [];
-    
+
+    // if (!receivedSources[bookName]) receivedSources[bookName] = [];
+
     saveState();
 };
 
@@ -143,13 +148,13 @@ const requestLocationWithOverlay = async () => {
 const selectBook = async (bookConfig) => {
     selectedBook = bookConfig;
     initBookStorage(selectedBook.bookName);
-    
+
     els.bookTitle.innerText = selectedBook.bookDisplayName;
     els.bookSelectorView.classList.add('hidden');
     els.bookSelectorView.classList.remove('flex');
     els.readingView.classList.remove('hidden');
     els.readingView.classList.add('flex');
-    
+
     renderNav();
     await loadChapter(Math.max(...unlockedChapters[selectedBook.bookName]));
 };
@@ -215,13 +220,13 @@ const init = async () => {
     if (lat !== null && lng !== null && !isNaN(unlock) && uuid !== null && targetBook) {
         initBookStorage(targetBook.bookName);
         selectedBook = targetBook;
-        
+
         els.bookTitle.innerText = selectedBook.bookDisplayName;
         els.bookSelectorView.classList.add('hidden');
         els.bookSelectorView.classList.remove('flex');
         els.readingView.classList.remove('hidden');
         els.readingView.classList.add('flex');
-        
+
         await handleReceive(parseFloat(lat), parseFloat(lng), unlock, uuid);
     } else {
         renderBookSelector();
@@ -403,7 +408,8 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
 
     const bookName = selectedBook.bookName;
     const unlocked = unlockedChapters[bookName];
-    const sources = receivedSources[bookName];
+    // const sources = receivedSources[bookName];
+    const sources = receivedSources;
 
     // Already unlocked? Just load it and clean URL.
     if (unlocked.includes(targetChapter)) {
@@ -445,7 +451,8 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
 
     if (distance <= 100) {
         unlockedChapters[bookName].push(targetChapter);
-        receivedSources[bookName].push(targetUuid);
+        // receivedSources[bookName].push(targetUuid);
+        receivedSources.push(targetUuid);
         saveState();
         showMessage('success', "Proximity confirmed. Decryption sequence initiated. New chapter acquired.");
     } else {
