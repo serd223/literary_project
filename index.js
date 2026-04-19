@@ -355,12 +355,17 @@ const generateQR = (lat, lng, subtext) => {
 
     // Render QR Code
     els.qrcode.innerHTML = '';
+    
+    const rootStyle = getComputedStyle(document.documentElement);
+    const themeBg = rootStyle.getPropertyValue('--bg-color').trim() || "#000000";
+    const themeText = rootStyle.getPropertyValue('--text-color').trim() || "#ffffff";
+
     new QRCode(els.qrcode, {
         text: url.toString(),
         width: 256,
         height: 256,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
+        colorDark: themeBg,
+        colorLight: themeText,
         correctLevel: QRCode.CorrectLevel.H
     });
 
