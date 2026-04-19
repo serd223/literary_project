@@ -3,15 +3,17 @@
  * APPLICATION STATE
  * ==========================================
  */
-let currentSubtext = 1;
-let unlockedSubtexts = [1];
+
+// index in CONFIG.subtexts array
+let currentSubtext = 0;
+let unlockedSubtexts = [0];
 let myUUID = null;
 let receivedSources = [];
 let sessionLocation = null;
 
-const DATA_KEY = `ake_project_data_meta`;
+const DATA_KEY = `ake_project_storage_data`;
 const UUID_KEY = `ake_project_uuid`;
-const SOURCES_KEY = `ake_project_sources_meta`;
+const SOURCES_KEY = `ake_project_storage_sources_data`;
 
 const generateUUID = () => {
     if (crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -25,12 +27,12 @@ const loadState = () => {
     if (saved) {
         try {
             unlockedSubtexts = JSON.parse(saved);
-            if (!Array.isArray(unlockedSubtexts)) unlockedSubtexts = [1];
+            if (!Array.isArray(unlockedSubtexts)) unlockedSubtexts = [0];
         } catch (e) {
-            unlockedSubtexts = [1];
+            unlockedSubtexts = [0];
         }
     } else {
-        unlockedSubtexts = [1];
+        unlockedSubtexts = [0];
     }
 
     myUUID = localStorage.getItem(UUID_KEY);
@@ -136,7 +138,7 @@ const requestLocationWithOverlay = async () => {
     });
 };
 const showReadingView = async () => {
-    els.subtextTitle.innerText = CONFIG.subtexts[Math.max(...unlockedSubtexts) - 1].subtextTitle;
+    els.subtextTitle.innerText = CONFIG.subtexts[Math.max(...unlockedSubtexts)].subtextTitle;
     els.welcomeView.classList.add('hidden');
     els.welcomeView.classList.remove('flex');
     els.readingView.classList.remove('hidden');
@@ -209,9 +211,9 @@ const applyColors = (bgColor, textColor) => {
 
 const renderNav = () => {
     els.subtextNav.innerHTML = '';
-    for (let i = 1; i <= CONFIG.subtexts.length; i++) {
+    for (let i = 0; i < CONFIG.subtexts.length; i++) {
         const btn = document.createElement('button');
-        btn.innerText = `[ ${CONFIG.subtexts[i - 1].subtextTitle} ]`;
+        btn.innerText = `[ ${CONFIG.subtexts[i].subtextTitle} ]`;
 
         if (unlockedSubtexts.includes(i)) {
             btn.className = `app-button app-nav-btn`;
@@ -227,12 +229,13 @@ const renderNav = () => {
     }
 
     // Share mechanics
-    if (currentSubtext < CONFIG.subtexts.length) {
+    let nextSubtext = currentSubtext + 1;
+    if (nextSubtext < CONFIG.subtexts.length) {
         els.actions.classList.remove('hidden');
         els.transmitBtn.classList.remove('hidden');
         els.qrWrapper.classList.add('hidden');
         els.qrWrapper.classList.remove('flex');
-        els.transmitBtn.innerText = `Transmit ${CONFIG.subtexts[currentSubtext].subtextTitle}`;
+        els.transmitBtn.innerText = `Transmit ${CONFIG.subtexts[nextSubtext].subtextTitle}`;
     } else {
         els.actions.classList.add('hidden');
     }
@@ -271,9 +274,9 @@ const showMessage = (type, text = '') => {
  */
 const loadSubtext = async (subtextNum) => {
     currentSubtext = subtextNum;
-    els.subtextTitle.innerText = CONFIG.subtexts[subtextNum - 1].subtextTitle;
+    els.subtextTitle.innerText = CONFIG.subtexts[subtextNum].subtextTitle;
     
-    const subtextConfig = CONFIG.subtexts[subtextNum - 1];
+    const subtextConfig = CONFIG.subtexts[subtextNum];
     applyColors(subtextConfig.bg_color, subtextConfig.text_color);
 
     renderNav();
@@ -283,7 +286,7 @@ const loadSubtext = async (subtextNum) => {
 
     try {
         // Dynamically fetch text file
-        const filepath = CONFIG.subtexts[subtextNum - 1].filepath;
+        const filepath = CONFIG.subtexts[subtextNum].filepath;
         const response = await fetch(filepath);
 
         if (!response.ok) {
@@ -299,6 +302,7 @@ const loadSubtext = async (subtextNum) => {
             .map(p => `<p>${p.trim()}</p>`)
             .join('');
 
+        // HTML injection for author credits
         const authorHtml = `<p><i>${subtextConfig.authorName}, ${subtextConfig.authorAge} - ${subtextConfig.authorTag}</i></p>`;
         els.storyContainer.innerHTML = html + authorHtml;
         showMessage('none');
@@ -322,7 +326,7 @@ const loadSubtext = async (subtextNum) => {
  */
 const handleTransmit = () => {
     const nextSubtext = currentSubtext + 1;
-    if (nextSubtext > CONFIG.subtexts.length) return;
+    if (nextSubtext >= CONFIG.subtexts.length) return;
 
     els.transmitBtn.innerText = "Acquiring Coordinates...";
     els.transmitBtn.disabled = true;
@@ -339,7 +343,7 @@ const handleTransmit = () => {
 };
 
 const resetTransmitBtn = (nextSubtext) => {
-    els.transmitBtn.innerText = `Transmit ${CONFIG.subtexts[nextSubtext - 1].subtextTitle}`;
+    els.transmitBtn.innerText = `Transmit ${CONFIG.subtexts[nextSubtext].subtextTitle}`;
     els.transmitBtn.disabled = false;
 };
 
