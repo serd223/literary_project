@@ -27,10 +27,10 @@
     <div class="max-w-2xl mx-auto w-full relative flex-grow flex flex-col">
         <!-- WELCOME VIEW -->
         <div id="welcome-view" class="flex-grow flex flex-col justify-center items-center text-center">
-            <h1 class="text-3xl md:text-5xl font-bold mb-6 leading-10"
-                id="project-title-intro"></h1>
+            <h1 class="text-3xl md:text-5xl font-bold mb-6 leading-10" id="project-title-intro"></h1>
             <p class="text-lg md:text-xl app-text-muted font-serif mb-12 max-w-lg">
-                This project consists of a virtual book that has its chapters written by different authors who vary in age and
+                This project consists of a virtual book that has its chapters written by different authors who vary in
+                age and
                 experience.
                 These authors came together to express their struggles and make you feel seen. In order to read all the
                 chapters, you have to receive each chapter from another reader by scanning their generated QR code.
@@ -43,14 +43,13 @@
                 <br>
                 PS: Beware, some of the contents might be triggering for you.
             </p>
-            <button id="continue-btn"
-                class="px-8 py-4 app-button text-xl font-bold w-full max-w-xs">
+            <button id="continue-btn" class="px-8 py-4 app-button text-xl font-bold w-full max-w-xs">
                 Continue
             </button>
-            <p class="text-lg md:text-xl app-text-regular font-serif mb-12 max-w-lg">
+            <p class="text-lg md:text-xl app-text-muted font-serif mb-12 max-w-lg">
                 <br> Creator: Elifnur Bölükbaş
             </p>
-            <p class="text-lg md:text-xl app-text-muted font-serif mb-12 max-w-lg">
+            <p class="text-sm md:text-base app-text-regular font-serif mb-12 max-w-lg italic">
                 <br> Web Development: Serdar Çoruhlu, 19 - AI & Data Engineering
             </p>
         </div>
@@ -83,8 +82,7 @@
             <!-- ACTIONS / FOOTER -->
             <footer id="actions" class="pt-10 pb-16 hidden shrink-0">
                 <div class="flex flex-col items-center">
-                    <button id="transmit-btn"
-                        class="px-6 py-4 font-bold text-lg w-full md:w-auto app-button">
+                    <button id="transmit-btn" class="px-6 py-4 font-bold text-lg w-full md:w-auto app-button">
                         Transmit Next Chapter
                     </button>
 
@@ -95,8 +93,7 @@
                         <div class="inline-block flex justify-center w-full max-w-[300px]">
                             <div id="qrcode"></div>
                         </div>
-                        <button id="close-qr-btn"
-                            class="mt-8 px-4 py-2 text-sm app-button w-full md:w-auto">
+                        <button id="close-qr-btn" class="mt-8 px-4 py-2 text-sm app-button w-full md:w-auto">
                             End Transmission
                         </button>
                     </div>
@@ -125,8 +122,8 @@
                     Read Unlocked Chapters
                 </button>
             </div>
-            <div id="location-error-text"
-                class="mt-8 text-[var(--accent-error)] text-sm max-w-md font-bold hidden"></div>
+            <div id="location-error-text" class="mt-8 text-[var(--accent-error)] text-sm max-w-md font-bold hidden">
+            </div>
         </div>
     </div>
 
