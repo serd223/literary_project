@@ -338,7 +338,7 @@ const handleTransmit = () => {
 };
 
 const resetTransmitBtn = (nextSubtext) => {
-    els.transmitBtn.innerText = `Transmit ${nextSubtext}`;
+    els.transmitBtn.innerText = `Transmit ${CONFIG.subtexts[nextSubtext - 1].subtextTitle}`;
     els.transmitBtn.disabled = false;
 };
 
