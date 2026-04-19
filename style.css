@@ -10,7 +10,7 @@ Edit these variables to quickly change the look of the project.
     --text-color: #84592B;
     --text-muted: #9D9167;
     --accent-error: #E8D1A7;
-    
+
     /* Button Colors */
     --button-bg: #442D1C;
     --button-text: #84592B;
@@ -27,7 +27,8 @@ Edit these variables to quickly change the look of the project.
     --reading-view-color: #000000;
 }
 
-body, * {
+body,
+* {
     font-family: 'Times New Roman', serif !important;
 }
 
@@ -94,7 +95,7 @@ h1 {
 #story-container {
     /* Smooth fade in */
     animation: fadeIn 1s ease-in-out;
-    color: var(--text-color); 
+    color: var(--text-color);
 }
 
 @keyframes fadeIn {
@@ -102,6 +103,7 @@ h1 {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -136,7 +138,7 @@ footer#actions {
 }
 
 /* System Messages Overrides */
-#messages > div {
+#messages>div {
     /* Base style for messages inherited from tailwind but enforcing border widths */
     border-width: var(--border-width);
 }
@@ -231,14 +233,27 @@ footer#actions {
 }
 
 /* Custom Thematic Overrides */
-.app-text-regular { color: var(--text-color); }
-.app-text-muted { color: var(--text-muted); }
-.app-qr-bg { background-color: var(--text-color); }
-.app-overlay-bg { background-color: var(--bg-color); }
+.app-text-regular {
+    color: var(--text-color);
+}
+
+.app-text-muted {
+    color: var(--text-muted);
+}
+
+.app-qr-bg {
+    background-color: var(--text-color);
+}
+
+.app-overlay-bg {
+    background-color: var(--bg-color);
+}
+
 .app-btn-ghost {
     color: var(--text-muted);
     border-color: var(--text-muted);
 }
+
 .app-btn-ghost:hover {
     color: var(--text-color);
     border-color: var(--text-color);
@@ -252,7 +267,9 @@ footer#actions {
     margin-top: 5rem;
 }
 
-.app-msg-loading, .app-msg-error, .app-msg-success {
+.app-msg-loading,
+.app-msg-error,
+.app-msg-success {
     padding: 1rem;
 }
 
@@ -276,16 +293,13 @@ footer#actions {
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .5; }
-}
 
-.app-qr-notice {
-    margin-bottom: 1.5rem;
-    font-size: 0.875rem;
-    text-align: center;
-    border-bottom: 1px solid var(--text-color);
-    padding-bottom: 0.5rem;
-    letter-spacing: 0.1em;
-    color: var(--text-muted);
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .5;
+    }
 }
