@@ -6,20 +6,20 @@ Edit these variables to quickly change the look of the project.
 */
 :root {
     /* Colors */
-    --bg-color: #000000;
-    --text-color: #ffffff;
-    --text-muted: #aaaaaa;
-    --accent-error: #ff3333;
+    --bg-color: #442D1C;
+    --text-color: #84592B;
+    --text-muted: #9D9167;
+    --accent-error: #E8D1A7;
     
     /* Button Colors */
-    --button-bg: #000000;
-    --button-text: #ffffff;
-    --button-hover-bg: #ffffff;
-    --button-hover-text: #000000;
+    --button-bg: #442D1C;
+    --button-text: #84592B;
+    --button-hover-bg: #743014;
+    --button-hover-text: #E8D1A7;
 
     /* Typography */
-    --font-ui: 'Courier Prime', monospace;
-    --font-story: 'Playfair Display', serif;
+    --font-ui: 'Times New Roman';
+    --font-story: 'Times New Roman';
 
     /* App Design Variables */
     --border-width: 2px;
@@ -192,8 +192,8 @@ footer#actions {
 }
 
 .app-nav-btn-locked {
-    color: #6b7280; /* Tailwind gray-500 equivalent */
-    border-color: #374151; /* Tailwind gray-700 equivalent */
+    color: #442D1C; /* Tailwind gray-500 equivalent */
+    border-color: #743014; /* Tailwind gray-700 equivalent */
     background: transparent;
     cursor: not-allowed;
     text-transform: uppercase;

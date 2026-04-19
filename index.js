@@ -232,7 +232,7 @@ const renderNav = () => {
         els.transmitBtn.classList.remove('hidden');
         els.qrWrapper.classList.add('hidden');
         els.qrWrapper.classList.remove('flex');
-        els.transmitBtn.innerText = `Transmit ${CONFIG.subtexts[currentSubtext - 1].subtextTitle}`;
+        els.transmitBtn.innerText = `Transmit ${CONFIG.subtexts[currentSubtext].subtextTitle}`;
     } else {
         els.actions.classList.add('hidden');
     }
