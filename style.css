@@ -17,14 +17,18 @@ Edit these variables to quickly change the look of the project.
     --button-hover-bg: #743014;
     --button-hover-text: #E8D1A7;
 
-    /* Typography */
-    --font-ui: 'Times New Roman';
-    --font-story: 'Times New Roman';
-
     /* App Design Variables */
     --border-width: 2px;
     --shadow-offset: 4px;
     --transition-speed: 0.1s;
+
+    /* Reading View UI Monochromatic Colors */
+    --reading-view-bg: #ffffff;
+    --reading-view-color: #000000;
+}
+
+body, * {
+    font-family: 'Times New Roman', serif !important;
 }
 
 body {
@@ -40,14 +44,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.font-serif {
-    font-family: var(--font-story);
-}
-
-.font-mono {
-    font-family: var(--font-ui);
-}
-
 /* Typography & Links */
 h1 {
     color: var(--text-color);
@@ -58,7 +54,6 @@ h1 {
     border: var(--border-width) solid var(--text-color);
     background: var(--button-bg);
     color: var(--button-text);
-    text-transform: uppercase;
     transition: all var(--transition-speed) ease;
     box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--text-color);
 }
@@ -146,6 +141,43 @@ footer#actions {
     border-width: var(--border-width);
 }
 
+/* Reading View Monochromatic Override */
+#reading-view .app-button {
+    background: var(--reading-view-bg) !important;
+    color: var(--reading-view-color) !important;
+    border-color: var(--reading-view-color) !important;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--reading-view-color) !important;
+}
+
+#reading-view .app-button:hover:not(:disabled) {
+    background: var(--reading-view-color) !important;
+    color: var(--reading-view-bg) !important;
+    box-shadow: calc(var(--shadow-offset) - 2px) calc(var(--shadow-offset) - 2px) 0px 0px var(--reading-view-color) !important;
+}
+
+#reading-view .app-button-active {
+    background: var(--reading-view-color) !important;
+    color: var(--reading-view-bg) !important;
+    box-shadow: 0px 0px 0px 0px var(--reading-view-color) !important;
+}
+
+#reading-view header {
+    border-bottom-color: var(--reading-view-color) !important;
+}
+
+#reading-view footer#actions {
+    border-top-color: var(--reading-view-color) !important;
+}
+
+#reading-view .app-border {
+    border-color: var(--reading-view-color) !important;
+}
+
+#reading-view .app-nav-btn-locked {
+    color: gray !important;
+    border-color: gray !important;
+}
+
 /* Text Selector Elements */
 .app-text-btn {
     padding: 1rem 1.5rem;
@@ -196,7 +228,6 @@ footer#actions {
     border-color: var(--text-muted);
     background: transparent;
     cursor: not-allowed;
-    text-transform: uppercase;
 }
 
 /* Custom Thematic Overrides */
@@ -222,7 +253,6 @@ footer#actions {
 
 .app-msg-loading, .app-msg-error, .app-msg-success {
     padding: 1rem;
-    text-transform: uppercase;
 }
 
 .app-msg-loading {
@@ -252,7 +282,6 @@ footer#actions {
 .app-qr-notice {
     margin-bottom: 1.5rem;
     font-size: 0.875rem;
-    text-transform: uppercase;
     text-align: center;
     border-bottom: 1px solid var(--text-muted);
     padding-bottom: 0.5rem;
