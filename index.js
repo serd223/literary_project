@@ -4,16 +4,14 @@
  * ==========================================
  */
 let currentChapter = 1;
-let selectedBook = null;
-let unlockedChapters = {};
+let unlockedChapters = [1];
 let myUUID = null;
-// let receivedSources = {};
 let receivedSources = [];
 let sessionLocation = null;
 
-const DATA_KEY = `proximitetext_data_v2`;
-const UUID_KEY = `proximitetext_uuid`;
-const SOURCES_KEY = `proximitetext_sources_v2`;
+const DATA_KEY = `ake_project_data_meta`;
+const UUID_KEY = `ake_project_uuid`;
+const SOURCES_KEY = `ake_project_sources_meta`;
 
 const generateUUID = () => {
     if (crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -27,11 +25,12 @@ const loadState = () => {
     if (saved) {
         try {
             unlockedChapters = JSON.parse(saved);
+            if (!Array.isArray(unlockedChapters)) unlockedChapters = [1];
         } catch (e) {
-            unlockedChapters = {};
+            unlockedChapters = [1];
         }
     } else {
-        unlockedChapters = {};
+        unlockedChapters = [1];
     }
 
     myUUID = localStorage.getItem(UUID_KEY);
@@ -61,14 +60,7 @@ const saveState = () => {
     localStorage.setItem(SOURCES_KEY, JSON.stringify(receivedSources));
 };
 
-const initBookStorage = (bookName) => {
-    if (!unlockedChapters[bookName]) unlockedChapters[bookName] = [1];
-    if (!unlockedChapters[bookName].includes(1)) unlockedChapters[bookName].push(1);
-
-    // if (!receivedSources[bookName]) receivedSources[bookName] = [];
-
-    saveState();
-};
+// Removed initBookStorage as we now manage a single dimensional state
 
 /**
  * ==========================================
@@ -92,10 +84,10 @@ const els = {
     grantLocationBtn: document.getElementById('grant-location-btn'),
     dismissLocationBtn: document.getElementById('dismiss-location-btn'),
     locationErrorText: document.getElementById('location-error-text'),
-    bookSelectorView: document.getElementById('book-selector-view'),
+    welcomeView: document.getElementById('welcome-view'),
+    continueBtn: document.getElementById('continue-btn'),
     readingView: document.getElementById('reading-view'),
-    bookList: document.getElementById('book-list'),
-    backToBooksBtn: document.getElementById('back-to-books-btn')
+    chapterTitle: document.getElementById('chapter-title')
 };
 
 /**
@@ -145,34 +137,22 @@ const requestLocationWithOverlay = async () => {
         els.dismissLocationBtn.addEventListener('click', onDismiss);
     });
 };
-const selectBook = async (bookConfig) => {
-    selectedBook = bookConfig;
-    initBookStorage(selectedBook.bookName);
-
-    els.bookTitle.innerText = selectedBook.bookDisplayName;
-    els.bookSelectorView.classList.add('hidden');
-    els.bookSelectorView.classList.remove('flex');
+const showReadingView = async () => {
+    els.chapterTitle.innerText = CONFIG.chapters[Math.max(...unlockedChapters) - 1].chapterTitle;
+    els.welcomeView.classList.add('hidden');
+    els.welcomeView.classList.remove('flex');
     els.readingView.classList.remove('hidden');
     els.readingView.classList.add('flex');
 
     renderNav();
-    await loadChapter(Math.max(...unlockedChapters[selectedBook.bookName]));
-};
-
-const renderBookSelector = () => {
-    els.bookList.innerHTML = '';
-    CONFIG.forEach(bookConfig => {
-        const btn = document.createElement('button');
-        btn.innerHTML = `<span class="app-book-btn-title">${bookConfig.bookDisplayName}</span> <span class="app-book-btn-chapters">${bookConfig.totalChapters} chap.</span>`;
-        btn.className = `app-button app-book-btn`;
-        btn.onclick = () => selectBook(bookConfig);
-        els.bookList.appendChild(btn);
-    });
+    await loadChapter(Math.max(...unlockedChapters));
 };
 
 const init = async () => {
     // Restore progress
     loadState();
+
+    document.getElementById('project-title-intro').innerText = CONFIG.projectTitle;
 
     // Setup events
     els.transmitBtn.addEventListener('click', handleTransmit);
@@ -181,13 +161,8 @@ const init = async () => {
         els.qrWrapper.classList.remove('flex');
         els.transmitBtn.classList.remove('hidden');
     });
-    els.backToBooksBtn.addEventListener('click', () => {
-        els.readingView.classList.add('hidden');
-        els.readingView.classList.remove('flex');
-        els.bookSelectorView.classList.remove('hidden');
-        els.bookSelectorView.classList.add('flex');
-        selectedBook = null;
-    });
+
+    els.continueBtn.addEventListener('click', showReadingView);
 
     // Request geolocation permission upfront so the browser prompts the user
     // before we need it, rather than deep inside the receive flow.
@@ -212,24 +187,11 @@ const init = async () => {
     const lng = urlParams.get('lng');
     const unlock = parseInt(urlParams.get('unlock'));
     const uuid = urlParams.get('uuid');
-    const bookNameParam = urlParams.get('book');
-
-    const targetBook = CONFIG.find(c => c.bookName === bookNameParam);
 
     // If QR code is scanned and points to valid book
-    if (lat !== null && lng !== null && !isNaN(unlock) && uuid !== null && targetBook) {
-        initBookStorage(targetBook.bookName);
-        selectedBook = targetBook;
-
-        els.bookTitle.innerText = selectedBook.bookDisplayName;
-        els.bookSelectorView.classList.add('hidden');
-        els.bookSelectorView.classList.remove('flex');
-        els.readingView.classList.remove('hidden');
-        els.readingView.classList.add('flex');
-
+    if (lat !== null && lng !== null && !isNaN(unlock) && uuid !== null) {
+        await showReadingView();
         await handleReceive(parseFloat(lat), parseFloat(lng), unlock, uuid);
-    } else {
-        renderBookSelector();
     }
 };
 
@@ -240,11 +202,11 @@ const init = async () => {
  */
 const renderNav = () => {
     els.chapterNav.innerHTML = '';
-    for (let i = 1; i <= selectedBook.totalChapters; i++) {
+    for (let i = 1; i <= CONFIG.chapters.length; i++) {
         const btn = document.createElement('button');
         btn.innerText = `[ CHAPTER ${i} ]`;
 
-        if (unlockedChapters[selectedBook.bookName].includes(i)) {
+        if (unlockedChapters.includes(i)) {
             btn.className = `app-button app-nav-btn`;
             if (i === currentChapter) {
                 btn.classList.add('app-button-active');
@@ -258,7 +220,7 @@ const renderNav = () => {
     }
 
     // Share mechanics
-    if (currentChapter < selectedBook.totalChapters) {
+    if (currentChapter < CONFIG.chapters.length) {
         els.actions.classList.remove('hidden');
         els.transmitBtn.classList.remove('hidden');
         els.qrWrapper.classList.add('hidden');
@@ -302,6 +264,7 @@ const showMessage = (type, text = '') => {
  */
 const loadChapter = async (chapterNum) => {
     currentChapter = chapterNum;
+    els.chapterTitle.innerText = CONFIG.chapters[chapterNum - 1].chapterTitle;
     renderNav();
     showMessage('loading');
     els.storyContainer.innerHTML = '';
@@ -309,7 +272,7 @@ const loadChapter = async (chapterNum) => {
 
     try {
         // Dynamically fetch text file
-        const filepath = `resources/books/${selectedBook.bookName}/chapter${chapterNum}.txt`;
+        const filepath = CONFIG.chapters[chapterNum - 1].filepath;
         const response = await fetch(filepath);
 
         if (!response.ok) {
@@ -328,13 +291,13 @@ const loadChapter = async (chapterNum) => {
         els.storyContainer.innerHTML = html;
         showMessage('none');
 
-        if (chapterNum < selectedBook.totalChapters) {
+        if (chapterNum < CONFIG.chapters.length) {
             els.actions.classList.remove('hidden');
         }
     } catch (err) {
         showMessage('error', `Data extraction failed. The requested sequence could not be located in the void. \n\n[ ${err.message} ]`);
         els.storyContainer.innerHTML = '<p class="app-story-error">[ STATIC NOISE ]</p>';
-        if (chapterNum < selectedBook.totalChapters) {
+        if (chapterNum < CONFIG.chapters.length) {
             els.actions.classList.remove('hidden');
         }
     }
@@ -347,7 +310,7 @@ const loadChapter = async (chapterNum) => {
  */
 const handleTransmit = () => {
     const nextChapter = currentChapter + 1;
-    if (nextChapter > selectedBook.totalChapters) return;
+    if (nextChapter > CONFIG.chapters.length) return;
 
     els.transmitBtn.innerText = "Acquiring Coordinates...";
     els.transmitBtn.disabled = true;
@@ -378,7 +341,6 @@ const generateQR = (lat, lng, chapter) => {
     url.searchParams.set('lng', lng.toString());
     url.searchParams.set('unlock', chapter.toString());
     url.searchParams.set('uuid', myUUID);
-    url.searchParams.set('book', selectedBook.bookName);
 
     // Render QR Code
     els.qrcode.innerHTML = '';
@@ -406,8 +368,7 @@ const generateQR = (lat, lng, chapter) => {
 const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) => {
     showMessage('loading');
 
-    const bookName = selectedBook.bookName;
-    const unlocked = unlockedChapters[bookName];
+    const unlocked = unlockedChapters;
     // const sources = receivedSources[bookName];
     const sources = receivedSources;
 
@@ -450,7 +411,7 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
     const distance = calculateDistance(currentLat, currentLng, targetLat, targetLng);
 
     if (distance <= 100) {
-        unlockedChapters[bookName].push(targetChapter);
+        unlockedChapters.push(targetChapter);
         // receivedSources[bookName].push(targetUuid);
         receivedSources.push(targetUuid);
         saveState();
@@ -463,7 +424,7 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
     renderNav();
 
     // Load the newly unlocked chapter, or highest fallback
-    const chapterToLoad = unlockedChapters[bookName].includes(targetChapter) ? targetChapter : Math.max(...unlockedChapters[bookName]);
+    const chapterToLoad = unlockedChapters.includes(targetChapter) ? targetChapter : Math.max(...unlockedChapters);
     await loadChapter(chapterToLoad);
 };
 

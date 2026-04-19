@@ -25,24 +25,22 @@
 <body class="font-mono p-4 md:p-8 lg:p-12 box-border">
 
     <div class="max-w-2xl mx-auto w-full relative flex-grow flex flex-col">
-        <!-- BOOK SELECTOR VIEW -->
-        <div id="book-selector-view" class="flex-grow flex flex-col justify-center mb-16">
-            <header class="mb-8 pb-4 border-b-2 border-white">
-                <h1 class="text-3xl font-bold tracking-tight uppercase">Select Frequency</h1>
-            </header>
-            <div id="book-list" class="flex flex-col gap-4">
-                <!-- Books injected here -->
-            </div>
+        <!-- WELCOME VIEW -->
+        <div id="welcome-view" class="flex-grow flex flex-col justify-center items-center text-center">
+            <h1 class="text-3xl md:text-5xl font-bold uppercase mb-6 tracking-widest leading-10" id="project-title-intro"></h1>
+            <p class="text-lg md:text-xl text-gray-400 font-serif mb-12 max-w-lg">
+                Welcome to the narrative void. Press continue to synchronize the frequency and extract available transmissions.
+            </p>
+            <button id="continue-btn" class="px-8 py-4 app-button tracking-wider text-xl font-bold w-full max-w-xs uppercase">
+                Continue
+            </button>
         </div>
 
         <!-- READING VIEW -->
         <div id="reading-view" class="hidden flex-grow flex flex-col">
             <!-- HEADER -->
             <header class="mb-12 pb-4 border-b-2 border-white flex justify-between items-end gap-4">
-                <h1 class="text-2xl md:text-5xl font-bold tracking-tight uppercase" id="book-title"></h1>
-                <button id="back-to-books-btn" class="text-xs md:text-sm uppercase text-gray-400 hover:text-white transition-colors pb-1 shrink-0">
-                    ← Back
-                </button>
+                <h1 class="text-2xl md:text-5xl font-bold tracking-tight uppercase" id="chapter-title"></h1>
             </header>
 
             <!-- SYSTEM MESSAGES -->
