@@ -231,6 +231,7 @@ footer#actions {
 }
 
 /* Custom Thematic Overrides */
+.app-text-regular { color: var(--text-color); }
 .app-text-muted { color: var(--text-muted); }
 .app-qr-bg { background-color: var(--text-color); }
 .app-overlay-bg { background-color: var(--bg-color); }
