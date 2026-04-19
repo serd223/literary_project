@@ -4,17 +4,15 @@
  * ==========================================
  */
 let currentChapter = 1;
-let unlockedChapters = [1];
+let selectedBook = null;
+let unlockedChapters = {}; 
 let myUUID = null;
-let receivedSources = [];
+let receivedSources = {};
 let sessionLocation = null;
 
-const LOCAL_STORAGE_KEY = `proximitetext_${CONFIG.bookName}`;
-const UUID_KEY = `proximitetext_uuid_${CONFIG.bookName}`;
-const SOURCES_KEY = `proximitetext_sources_${CONFIG.bookName}`;
-console.log(LOCAL_STORAGE_KEY);
-console.log(UUID_KEY);
-console.log(SOURCES_KEY);
+const DATA_KEY = `proximitetext_data_v2`;
+const UUID_KEY = `proximitetext_uuid`;
+const SOURCES_KEY = `proximitetext_sources_v2`;
 
 const generateUUID = () => {
     if (crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -24,15 +22,15 @@ const generateUUID = () => {
 };
 
 const loadState = () => {
-    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const saved = localStorage.getItem(DATA_KEY);
     if (saved) {
         try {
-            const parsed = JSON.parse(saved);
-            unlockedChapters = Array.isArray(parsed) ? parsed : [1];
-            if (!unlockedChapters.includes(1)) unlockedChapters.push(1);
+            unlockedChapters = JSON.parse(saved);
         } catch (e) {
-            unlockedChapters = [1];
+            unlockedChapters = {};
         }
+    } else {
+        unlockedChapters = {};
     }
 
     myUUID = localStorage.getItem(UUID_KEY);
@@ -46,14 +44,25 @@ const loadState = () => {
         try {
             receivedSources = JSON.parse(savedSources);
         } catch (e) {
-            receivedSources = [];
+            receivedSources = {};
         }
+    } else {
+        receivedSources = {};
     }
 };
 
 const saveState = () => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify([...new Set(unlockedChapters)]));
-    localStorage.setItem(SOURCES_KEY, JSON.stringify([...new Set(receivedSources)]));
+    localStorage.setItem(DATA_KEY, JSON.stringify(unlockedChapters));
+    localStorage.setItem(SOURCES_KEY, JSON.stringify(receivedSources));
+};
+
+const initBookStorage = (bookName) => {
+    if (!unlockedChapters[bookName]) unlockedChapters[bookName] = [1];
+    if (!unlockedChapters[bookName].includes(1)) unlockedChapters[bookName].push(1);
+    
+    if (!receivedSources[bookName]) receivedSources[bookName] = [];
+    
+    saveState();
 };
 
 /**
@@ -127,10 +136,32 @@ const requestLocationWithOverlay = async () => {
         els.dismissLocationBtn.addEventListener('click', onDismiss);
     });
 };
-const init = async () => {
-    // Setup title
-    els.bookTitle.innerText = CONFIG.bookName.replace(/_/g, ' ');
+const selectBook = async (bookConfig) => {
+    selectedBook = bookConfig;
+    initBookStorage(selectedBook.bookName);
+    
+    els.bookTitle.innerText = selectedBook.bookDisplayName;
+    els.bookSelectorView.classList.add('hidden');
+    els.bookSelectorView.classList.remove('flex');
+    els.readingView.classList.remove('hidden');
+    els.readingView.classList.add('flex');
+    
+    renderNav();
+    await loadChapter(Math.max(...unlockedChapters[selectedBook.bookName]));
+};
 
+const renderBookSelector = () => {
+    els.bookList.innerHTML = '';
+    CONFIG.forEach(bookConfig => {
+        const btn = document.createElement('button');
+        btn.innerHTML = `${bookConfig.bookDisplayName}, <em class="font-serif ml-4 text-sm text-gray-400 font-normal">${bookConfig.totalChapters} chap.</em>`;
+        btn.className = `px-6 py-4 font-bold text-base md:text-lg w-full app-button tracking-wider text-left flex justify-between items-center`;
+        btn.onclick = () => selectBook(bookConfig);
+        els.bookList.appendChild(btn);
+    });
+};
+
+const init = async () => {
     // Restore progress
     loadState();
 
@@ -140,6 +171,13 @@ const init = async () => {
         els.qrWrapper.classList.add('hidden');
         els.qrWrapper.classList.remove('flex');
         els.transmitBtn.classList.remove('hidden');
+    });
+    els.backToBooksBtn.addEventListener('click', () => {
+        els.readingView.classList.add('hidden');
+        els.readingView.classList.remove('flex');
+        els.bookSelectorView.classList.remove('hidden');
+        els.bookSelectorView.classList.add('flex');
+        selectedBook = null;
     });
 
     // Request geolocation permission upfront so the browser prompts the user
@@ -165,13 +203,24 @@ const init = async () => {
     const lng = urlParams.get('lng');
     const unlock = parseInt(urlParams.get('unlock'));
     const uuid = urlParams.get('uuid');
+    const bookNameParam = urlParams.get('book');
 
-    // Explicit null check is safer for query params
-    if (lat !== null && lng !== null && !isNaN(unlock) && uuid !== null) {
+    const targetBook = CONFIG.find(c => c.bookName === bookNameParam);
+
+    // If QR code is scanned and points to valid book
+    if (lat !== null && lng !== null && !isNaN(unlock) && uuid !== null && targetBook) {
+        initBookStorage(targetBook.bookName);
+        selectedBook = targetBook;
+        
+        els.bookTitle.innerText = selectedBook.bookDisplayName;
+        els.bookSelectorView.classList.add('hidden');
+        els.bookSelectorView.classList.remove('flex');
+        els.readingView.classList.remove('hidden');
+        els.readingView.classList.add('flex');
+        
         await handleReceive(parseFloat(lat), parseFloat(lng), unlock, uuid);
     } else {
-        renderNav();
-        await loadChapter(Math.max(...unlockedChapters));
+        renderBookSelector();
     }
 };
 
@@ -182,11 +231,11 @@ const init = async () => {
  */
 const renderNav = () => {
     els.chapterNav.innerHTML = '';
-    for (let i = 1; i <= CONFIG.totalChapters; i++) {
+    for (let i = 1; i <= selectedBook.totalChapters; i++) {
         const btn = document.createElement('button');
         btn.innerText = `[ CHAPTER ${i} ]`;
 
-        if (unlockedChapters.includes(i)) {
+        if (unlockedChapters[selectedBook.bookName].includes(i)) {
             btn.className = `px-3 py-2 font-bold app-button text-xs md:text-sm`;
             if (i === currentChapter) {
                 btn.classList.add('app-button-active');
@@ -200,7 +249,7 @@ const renderNav = () => {
     }
 
     // Share mechanics
-    if (currentChapter < CONFIG.totalChapters) {
+    if (currentChapter < selectedBook.totalChapters) {
         els.actions.classList.remove('hidden');
         els.transmitBtn.classList.remove('hidden');
         els.qrWrapper.classList.add('hidden');
@@ -251,7 +300,7 @@ const loadChapter = async (chapterNum) => {
 
     try {
         // Dynamically fetch text file
-        const filepath = `resources/books/${CONFIG.bookName}/chapter${chapterNum}.txt`;
+        const filepath = `resources/books/${selectedBook.bookName}/chapter${chapterNum}.txt`;
         const response = await fetch(filepath);
 
         if (!response.ok) {
@@ -270,13 +319,13 @@ const loadChapter = async (chapterNum) => {
         els.storyContainer.innerHTML = html;
         showMessage('none');
 
-        if (chapterNum < CONFIG.totalChapters) {
+        if (chapterNum < selectedBook.totalChapters) {
             els.actions.classList.remove('hidden');
         }
     } catch (err) {
         showMessage('error', `Data extraction failed. The requested sequence could not be located in the void. \n\n[ ${err.message} ]`);
         els.storyContainer.innerHTML = '<p class="opacity-50 text-center font-mono mt-20">[ STATIC NOISE ]</p>';
-        if (chapterNum < CONFIG.totalChapters) {
+        if (chapterNum < selectedBook.totalChapters) {
             els.actions.classList.remove('hidden');
         }
     }
@@ -289,7 +338,7 @@ const loadChapter = async (chapterNum) => {
  */
 const handleTransmit = () => {
     const nextChapter = currentChapter + 1;
-    if (nextChapter > CONFIG.totalChapters) return;
+    if (nextChapter > selectedBook.totalChapters) return;
 
     els.transmitBtn.innerText = "Acquiring Coordinates...";
     els.transmitBtn.disabled = true;
@@ -320,7 +369,8 @@ const generateQR = (lat, lng, chapter) => {
     url.searchParams.set('lng', lng.toString());
     url.searchParams.set('unlock', chapter.toString());
     url.searchParams.set('uuid', myUUID);
-    console.log(url.toString())
+    url.searchParams.set('book', selectedBook.bookName);
+
     // Render QR Code
     els.qrcode.innerHTML = '';
     new QRCode(els.qrcode, {
@@ -347,8 +397,12 @@ const generateQR = (lat, lng, chapter) => {
 const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) => {
     showMessage('loading');
 
+    const bookName = selectedBook.bookName;
+    const unlocked = unlockedChapters[bookName];
+    const sources = receivedSources[bookName];
+
     // Already unlocked? Just load it and clean URL.
-    if (unlockedChapters.includes(targetChapter)) {
+    if (unlocked.includes(targetChapter)) {
         cleanUrlParams();
         renderNav();
         await loadChapter(targetChapter);
@@ -359,15 +413,15 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
         showMessage('error', "Signal rejected. You cannot scan your own carrier signal.");
         cleanUrlParams();
         renderNav();
-        await loadChapter(Math.max(...unlockedChapters));
+        await loadChapter(Math.max(...unlocked));
         return;
     }
 
-    if (receivedSources.includes(targetUuid)) {
+    if (sources.includes(targetUuid)) {
         showMessage('error', "Signal rejected. You have already extracted data from this specific carrier. Seek a new source.");
         cleanUrlParams();
         renderNav();
-        await loadChapter(Math.max(...unlockedChapters));
+        await loadChapter(Math.max(...unlocked));
         return;
     }
 
@@ -376,7 +430,7 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
         showMessage('error', "Your interface lacks spatial awareness capabilities. Cannot confirm proximity. You must reveal your location.");
         cleanUrlParams();
         renderNav();
-        await loadChapter(Math.max(...unlockedChapters));
+        await loadChapter(Math.max(...unlocked));
         return;
     }
 
@@ -386,8 +440,8 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
     const distance = calculateDistance(currentLat, currentLng, targetLat, targetLng);
 
     if (distance <= 100) {
-        unlockedChapters.push(targetChapter);
-        receivedSources.push(targetUuid);
+        unlockedChapters[bookName].push(targetChapter);
+        receivedSources[bookName].push(targetUuid);
         saveState();
         showMessage('success', "Proximity confirmed. Decryption sequence initiated. New chapter acquired.");
     } else {
@@ -398,7 +452,7 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
     renderNav();
 
     // Load the newly unlocked chapter, or highest fallback
-    const chapterToLoad = unlockedChapters.includes(targetChapter) ? targetChapter : Math.max(...unlockedChapters);
+    const chapterToLoad = unlockedChapters[bookName].includes(targetChapter) ? targetChapter : Math.max(...unlockedChapters[bookName]);
     await loadChapter(chapterToLoad);
 };
 
