@@ -192,11 +192,24 @@ footer#actions {
 }
 
 .app-nav-btn-locked {
-    color: #442D1C; /* Tailwind gray-500 equivalent */
-    border-color: #743014; /* Tailwind gray-700 equivalent */
+    color: var(--text-muted);
+    border-color: var(--text-muted);
     background: transparent;
     cursor: not-allowed;
     text-transform: uppercase;
+}
+
+/* Custom Thematic Overrides */
+.app-text-muted { color: var(--text-muted); }
+.app-qr-bg { background-color: var(--text-color); }
+.app-overlay-bg { background-color: var(--bg-color); }
+.app-btn-ghost {
+    color: var(--text-muted);
+    border-color: var(--text-muted);
+}
+.app-btn-ghost:hover {
+    color: var(--text-color);
+    border-color: var(--text-color);
 }
 
 /* UI States */

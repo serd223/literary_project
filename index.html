@@ -29,7 +29,7 @@
         <div id="welcome-view" class="flex-grow flex flex-col justify-center items-center text-center">
             <h1 class="text-3xl md:text-5xl font-bold uppercase mb-6 tracking-widest leading-10"
                 id="project-title-intro"></h1>
-            <p class="text-lg md:text-xl text-gray-400 font-serif mb-12 max-w-lg">
+            <p class="text-lg md:text-xl app-text-muted font-serif mb-12 max-w-lg">
                 This project includes a book that has its chapters from different writers who varies in age and
                 experience.
                 These writers came together to express their struggles and make you feel seen. In order to read all the
@@ -45,7 +45,7 @@
                 class="px-8 py-4 app-button tracking-wider text-xl font-bold w-full max-w-xs uppercase">
                 Continue
             </button>
-            <p class="text-lg md:text-xl text-gray-400 font-serif mb-12 max-w-lg">
+            <p class="text-lg md:text-xl app-text-muted font-serif mb-12 max-w-lg">
                 <br> Creator: Elifnur Bölükbaş
             </p>
         </div>
@@ -53,7 +53,7 @@
         <!-- READING VIEW -->
         <div id="reading-view" class="hidden flex-grow flex flex-col">
             <!-- HEADER -->
-            <header class="mb-12 pb-4 border-b-2 border-white flex justify-between items-end gap-4">
+            <header class="mb-12 pb-4 flex justify-between items-end gap-4">
                 <h1 class="text-2xl md:text-5xl font-bold tracking-tight uppercase" id="subtext-title"></h1>
             </header>
 
@@ -66,7 +66,7 @@
             </div>
 
             <!-- MAIN TEXT AREA -->
-            <main id="story-container" class="font-serif text-gray-200 mb-16 flex-grow">
+            <main id="story-container" class="font-serif mb-16 flex-grow">
                 <!-- Story text dynamically injected here -->
             </main>
 
@@ -76,7 +76,7 @@
             </nav>
 
             <!-- ACTIONS / FOOTER -->
-            <footer id="actions" class="border-t-2 border-white pt-10 pb-16 hidden shrink-0">
+            <footer id="actions" class="pt-10 pb-16 hidden shrink-0">
                 <div class="flex flex-col items-center">
                     <button id="transmit-btn"
                         class="px-6 py-4 font-bold text-lg w-full md:w-auto app-button tracking-wider">
@@ -87,7 +87,7 @@
                         <p class="app-qr-notice">
                             QR Available
                         </p>
-                        <div class="bg-white p-6 app-border inline-block flex justify-center w-full max-w-[300px]">
+                        <div class="app-qr-bg p-6 app-border inline-block flex justify-center w-full max-w-[300px]">
                             <div id="qrcode"></div>
                         </div>
                         <button id="close-qr-btn"
@@ -102,13 +102,13 @@
 
     <!-- LOCATION OVERLAY -->
     <div id="location-overlay"
-        class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-6 text-white text-center font-mono">
+        class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-6 text-center font-mono">
         <!-- Background element overriding Tailwind opacity constraints if needed, or just standard bg -->
-        <div class="absolute inset-0 bg-black opacity-95"></div>
+        <div class="absolute inset-0 app-overlay-bg opacity-95"></div>
 
         <div class="relative z-10 flex flex-col items-center">
             <h2 class="text-2xl md:text-3xl font-bold mb-4 uppercase tracking-widest">Location Unavailable</h2>
-            <p class="mb-8 max-w-md font-serif text-lg md:text-xl text-gray-300">
+            <p class="mb-8 max-w-md font-serif text-lg md:text-xl app-text-muted">
                 Reminder: This site needs to access your location in order to give you a full experience
             </p>
             <div class="flex flex-col gap-4 w-full max-w-sm">
@@ -116,7 +116,7 @@
                     Grant Location
                 </button>
                 <button id="dismiss-location-btn"
-                    class="px-6 py-3 text-sm app-border bg-transparent text-gray-400 transition-colors uppercase cursor-pointer hover:border-white hover:text-white w-full tracking-widest">
+                    class="px-6 py-3 text-sm app-border bg-transparent transition-colors uppercase cursor-pointer w-full tracking-widest app-btn-ghost">
                     Read Unlocked Chapters
                 </button>
             </div>
