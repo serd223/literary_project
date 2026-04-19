@@ -299,7 +299,8 @@ const loadSubtext = async (subtextNum) => {
             .map(p => `<p>${p.trim()}</p>`)
             .join('');
 
-        els.storyContainer.innerHTML = html;
+        const authorHtml = `<p><i>${subtextConfig.authorName}, ${subtextConfig.authorAge} - ${subtextConfig.authorTag}</i></p>`;
+        els.storyContainer.innerHTML = html + authorHtml;
         showMessage('none');
 
         if (subtextNum < CONFIG.subtexts.length) {
