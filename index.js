@@ -152,6 +152,10 @@ const init = async () => {
 
     document.getElementById('project-title-intro').innerText = CONFIG.projectTitle;
 
+    if (CONFIG.main_colors) {
+        applyColors(CONFIG.main_colors.bg_color, CONFIG.main_colors.text_color);
+    }
+
     // Setup events
     els.transmitBtn.addEventListener('click', handleTransmit);
     els.closeQrBtn.addEventListener('click', () => {
@@ -198,11 +202,16 @@ const init = async () => {
  * UI RENDERING
  * ==========================================
  */
+const applyColors = (bgColor, textColor) => {
+    if (bgColor) document.documentElement.style.setProperty('--bg-color', bgColor);
+    if (textColor) document.documentElement.style.setProperty('--text-color', textColor);
+};
+
 const renderNav = () => {
     els.subtextNav.innerHTML = '';
     for (let i = 1; i <= CONFIG.subtexts.length; i++) {
         const btn = document.createElement('button');
-        btn.innerText = `[ ${CONFIG.subtexts[i].subtextTitle} ]`;
+        btn.innerText = `[ ${CONFIG.subtexts[i - 1].subtextTitle} ]`;
 
         if (unlockedSubtexts.includes(i)) {
             btn.className = `app-button app-nav-btn`;
@@ -223,7 +232,7 @@ const renderNav = () => {
         els.transmitBtn.classList.remove('hidden');
         els.qrWrapper.classList.add('hidden');
         els.qrWrapper.classList.remove('flex');
-        els.transmitBtn.innerText = `Transmit ${CONFIG.subtexts[currentSubtext].subtextTitle}`;
+        els.transmitBtn.innerText = `Transmit ${CONFIG.subtexts[currentSubtext - 1].subtextTitle}`;
     } else {
         els.actions.classList.add('hidden');
     }
@@ -263,6 +272,10 @@ const showMessage = (type, text = '') => {
 const loadSubtext = async (subtextNum) => {
     currentSubtext = subtextNum;
     els.subtextTitle.innerText = CONFIG.subtexts[subtextNum - 1].subtextTitle;
+    
+    const subtextConfig = CONFIG.subtexts[subtextNum - 1];
+    applyColors(subtextConfig.bg_color, subtextConfig.text_color);
+
     renderNav();
     showMessage('loading');
     els.storyContainer.innerHTML = '';
