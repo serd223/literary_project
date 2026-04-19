@@ -293,8 +293,8 @@ const loadSubtext = async (subtextNum) => {
             els.actions.classList.remove('hidden');
         }
     } catch (err) {
-        showMessage('error', `Data extraction failed. The requested sequence could not be located in the void. \n\n[ ${err.message} ]`);
-        els.storyContainer.innerHTML = '<p class="app-story-error">[ STATIC NOISE ]</p>';
+        // showMessage('error', `Data extraction failed. The requested sequence could not be located in the void. \n\n[ ${err.message} ]`);
+        // els.storyContainer.innerHTML = '<p class="app-story-error">[ STATIC NOISE ]</p>';
         if (subtextNum < CONFIG.subtexts.length) {
             els.actions.classList.remove('hidden');
         }
@@ -314,7 +314,7 @@ const handleTransmit = () => {
     els.transmitBtn.disabled = true;
 
     if (!navigator.geolocation || !sessionLocation) {
-        showMessage('error', "Your interface lacks spatial awareness capabilities. Transmission failed.");
+        showMessage('error', "Transmission is not available without location access.");
         resetTransmitBtn(nextSubtext);
         return;
     }
@@ -325,7 +325,7 @@ const handleTransmit = () => {
 };
 
 const resetTransmitBtn = (nextSubtext) => {
-    els.transmitBtn.innerText = `Transmit Subtext ${nextSubtext}`;
+    els.transmitBtn.innerText = `Transmit ${nextSubtext}`;
     els.transmitBtn.disabled = false;
 };
 
@@ -379,7 +379,7 @@ const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) =>
     }
 
     if (targetUuid === myUUID) {
-        showMessage('error', "Signal rejected. You cannot scan your own carrier signal.");
+        showMessage('error', "You can not transmit to yourself, you need to receive it from another person.");
         cleanUrlParams();
         renderNav();
         await loadSubtext(Math.max(...unlocked));
@@ -387,7 +387,7 @@ const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) =>
     }
 
     if (sources.includes(targetUuid)) {
-        showMessage('error', "Signal rejected. You have already extracted data from this specific carrier. Seek a new source.");
+        showMessage('error', "You had already received a chapter from this device, please try a new one.");
         cleanUrlParams();
         renderNav();
         await loadSubtext(Math.max(...unlocked));
@@ -396,7 +396,7 @@ const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) =>
 
     // Ask for location to verify proximity
     if (!navigator.geolocation || !sessionLocation) {
-        showMessage('error', "Your interface lacks spatial awareness capabilities. Cannot confirm proximity. You must reveal your location.");
+        showMessage('error', "Receival is not available without location access.");
         cleanUrlParams();
         renderNav();
         await loadSubtext(Math.max(...unlocked));
@@ -408,14 +408,14 @@ const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) =>
 
     const distance = calculateDistance(currentLat, currentLng, targetLat, targetLng);
 
-    if (distance <= 100) {
+    if (distance <= 30) {
         unlockedSubtexts.push(targetSubtext);
         // receivedSources[textName].push(targetUuid);
         receivedSources.push(targetUuid);
         saveState();
-        showMessage('success', "Proximity confirmed. Decryption sequence initiated. New subtext acquired.");
+        // showMessage('success', "Proximity confirmed. Decryption sequence initiated. New subtext acquired.");
     } else {
-        showMessage('error', `You are too far from the source (${Math.round(distance)}m). The text requires physical proximity (within 100m) to a carrier.`);
+        showMessage('error', "You are too far away from the transmitter, you need to get closer.");
     }
 
     cleanUrlParams();
