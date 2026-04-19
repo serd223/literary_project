@@ -202,7 +202,7 @@ const renderNav = () => {
     els.subtextNav.innerHTML = '';
     for (let i = 1; i <= CONFIG.subtexts.length; i++) {
         const btn = document.createElement('button');
-        btn.innerText = `[ SUBTEXT ${i} ]`;
+        btn.innerText = `[ ${CONFIG.subtexts[i].subtextTitle} ]`;
 
         if (unlockedSubtexts.includes(i)) {
             btn.className = `app-button app-nav-btn`;
@@ -223,7 +223,7 @@ const renderNav = () => {
         els.transmitBtn.classList.remove('hidden');
         els.qrWrapper.classList.add('hidden');
         els.qrWrapper.classList.remove('flex');
-        els.transmitBtn.innerText = `Transmit Subtext ${currentSubtext + 1}`;
+        els.transmitBtn.innerText = `Transmit ${CONFIG.subtexts[currentSubtext].subtextTitle}`;
     } else {
         els.actions.classList.add('hidden');
     }

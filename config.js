@@ -4,7 +4,7 @@
  * Edit this file to add new texts or subtexts
  */
 const CONFIG = {
-    projectTitle: "Central Text",
+    projectTitle: "Welcome!",
     subtexts: [
         {
             subtextTitle: "Yellow",
