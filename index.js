@@ -206,7 +206,28 @@ const init = async () => {
  */
 const applyTheme = (config) => {
     if (config.bg_color) document.documentElement.style.setProperty('--bg-color', config.bg_color);
-    if (config.text_color) document.documentElement.style.setProperty('--text-color', config.text_color);
+    if (config.text_color) {
+        document.documentElement.style.setProperty('--text-color', config.text_color);
+        
+        let brightness = 0;
+        let hex = config.text_color.replace('#', '');
+        if (hex.length === 8) hex = hex.substring(0, 6);
+        if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
+        if (hex.length === 6) {
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        }
+        
+        if (brightness > 128) {
+            document.documentElement.style.setProperty('--knockout-blend', 'screen');
+            document.documentElement.style.setProperty('--knockout-color', '#000000');
+        } else {
+            document.documentElement.style.setProperty('--knockout-blend', 'multiply');
+            document.documentElement.style.setProperty('--knockout-color', '#ffffff');
+        }
+    }
     
     if (config.bg_image_url) {
         document.documentElement.style.setProperty('--bg-image', `url('${config.bg_image_url}')`);

@@ -170,14 +170,18 @@ footer#actions {
 
 #reading-view .app-button:hover:not(:disabled) {
     background: var(--text-color) !important;
-    color: transparent !important;
-    box-shadow: calc(var(--shadow-offset) - 2px) calc(var(--shadow-offset) - 2px) 0px 0px var(--text-color) !important;
+    color: var(--knockout-color) !important;
+    mix-blend-mode: var(--knockout-blend) !important;
+    box-shadow: none !important;
+    transform: translate(var(--shadow-offset), var(--shadow-offset));
 }
 
 #reading-view .app-button-active {
     background: var(--text-color) !important;
-    color: transparent !important;
-    box-shadow: 0px 0px 0px 0px var(--text-color) !important;
+    color: var(--knockout-color) !important;
+    mix-blend-mode: var(--knockout-blend) !important;
+    box-shadow: none !important;
+    transform: translate(var(--shadow-offset), var(--shadow-offset));
 }
 
 #reading-view header {
