@@ -162,7 +162,7 @@ footer#actions {
 
 /* Reading View Monochromatic Override */
 #reading-view .app-button {
-    background: var(--bg-color) !important;
+    background: transparent !important;
     color: var(--text-color) !important;
     border-color: var(--text-color) !important;
     box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--text-color) !important;
@@ -170,13 +170,13 @@ footer#actions {
 
 #reading-view .app-button:hover:not(:disabled) {
     background: var(--text-color) !important;
-    color: var(--bg-color) !important;
+    color: transparent !important;
     box-shadow: calc(var(--shadow-offset) - 2px) calc(var(--shadow-offset) - 2px) 0px 0px var(--text-color) !important;
 }
 
 #reading-view .app-button-active {
     background: var(--text-color) !important;
-    color: var(--bg-color) !important;
+    color: transparent !important;
     box-shadow: 0px 0px 0px 0px var(--text-color) !important;
 }
 

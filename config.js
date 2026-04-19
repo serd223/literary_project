@@ -16,7 +16,8 @@ const CONFIG = {
             authorName: "Zelal Sara Aslan",
             authorAge: 17,
             authorTag: "High School",
-            bg_image_url: "https://i.pinimg.com/1200x/d9/95/21/d995213d13be510e45107f92a44f0697.jpg",
+            bg_image_url: "resources/backgrounds/yellow.jpg",
+            bg_image_blur: "10px",
             bg_color: "#FFEE99",
             text_color: "#000000"
         },
