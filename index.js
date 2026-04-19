@@ -86,7 +86,11 @@ const els = {
     locationOverlay: document.getElementById('location-overlay'),
     grantLocationBtn: document.getElementById('grant-location-btn'),
     dismissLocationBtn: document.getElementById('dismiss-location-btn'),
-    locationErrorText: document.getElementById('location-error-text')
+    locationErrorText: document.getElementById('location-error-text'),
+    bookSelectorView: document.getElementById('book-selector-view'),
+    readingView: document.getElementById('reading-view'),
+    bookList: document.getElementById('book-list'),
+    backToBooksBtn: document.getElementById('back-to-books-btn')
 };
 
 /**
