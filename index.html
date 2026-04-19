@@ -47,10 +47,10 @@
 
             <!-- SYSTEM MESSAGES -->
             <div id="messages" class="mb-8 hidden shrink-0 text-sm md:text-base">
-                <div id="loading" class="animate-pulse p-4 uppercase app-border bg-black text-white">Summoning text...
+                <div id="loading" class="app-msg-loading">Summoning text...
                 </div>
-                <div id="error" class="hidden p-4 uppercase app-error-border bg-black"></div>
-                <div id="success" class="hidden p-4 uppercase app-border bg-black text-white"></div>
+                <div id="error" class="hidden app-msg-error"></div>
+                <div id="success" class="hidden app-msg-success"></div>
             </div>
 
             <!-- NAVIGATION -->
@@ -72,7 +72,7 @@
                     </button>
 
                     <div id="qr-wrapper" class="hidden w-full flex-col items-center mt-4">
-                        <p class="mb-6 text-sm uppercase text-center border-b border-gray-700 pb-2 tracking-widest text-[#aaaaaa]">
+                        <p class="app-qr-notice">
                             Carrier Signal Active. Awaiting Receiver.
                         </p>
                         <div class="bg-white p-6 app-border inline-block flex justify-center w-full max-w-[300px]">

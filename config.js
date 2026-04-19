@@ -2,7 +2,7 @@
         * ==========================================
         * CONFIGURATION
         * ==========================================
-        * Edit these variables to setup a new project.
+        * Edit this file to add new books
         */
 const CONFIG = [
     {

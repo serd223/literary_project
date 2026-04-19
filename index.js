@@ -163,8 +163,8 @@ const renderBookSelector = () => {
     els.bookList.innerHTML = '';
     CONFIG.forEach(bookConfig => {
         const btn = document.createElement('button');
-        btn.innerHTML = `${bookConfig.bookDisplayName}, <em class="font-serif ml-4 text-sm text-gray-400 font-normal">${bookConfig.totalChapters} chap.</em>`;
-        btn.className = `px-6 py-4 font-bold text-base md:text-lg w-full app-button tracking-wider text-left flex justify-between items-center`;
+        btn.innerHTML = `<span class="app-book-btn-title">${bookConfig.bookDisplayName}</span> <span class="app-book-btn-chapters">${bookConfig.totalChapters} chap.</span>`;
+        btn.className = `app-button app-book-btn`;
         btn.onclick = () => selectBook(bookConfig);
         els.bookList.appendChild(btn);
     });
@@ -245,13 +245,13 @@ const renderNav = () => {
         btn.innerText = `[ CHAPTER ${i} ]`;
 
         if (unlockedChapters[selectedBook.bookName].includes(i)) {
-            btn.className = `px-3 py-2 font-bold app-button text-xs md:text-sm`;
+            btn.className = `app-button app-nav-btn`;
             if (i === currentChapter) {
                 btn.classList.add('app-button-active');
             }
             btn.onclick = () => loadChapter(i);
         } else {
-            btn.className = `px-3 py-2 app-border text-xs md:text-sm text-gray-500 border-gray-700 bg-transparent cursor-not-allowed uppercase`;
+            btn.className = `app-border app-nav-btn app-nav-btn-locked`;
             btn.disabled = true;
         }
         els.chapterNav.appendChild(btn);
@@ -333,7 +333,7 @@ const loadChapter = async (chapterNum) => {
         }
     } catch (err) {
         showMessage('error', `Data extraction failed. The requested sequence could not be located in the void. \n\n[ ${err.message} ]`);
-        els.storyContainer.innerHTML = '<p class="opacity-50 text-center font-mono mt-20">[ STATIC NOISE ]</p>';
+        els.storyContainer.innerHTML = '<p class="app-story-error">[ STATIC NOISE ]</p>';
         if (chapterNum < selectedBook.totalChapters) {
             els.actions.classList.remove('hidden');
         }

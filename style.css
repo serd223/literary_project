@@ -145,3 +145,104 @@ footer#actions {
     /* Base style for messages inherited from tailwind but enforcing border widths */
     border-width: var(--border-width);
 }
+
+/* Book Selector Elements */
+.app-book-btn {
+    padding: 1rem 1.5rem;
+    font-weight: bold;
+    font-size: 1rem;
+    width: 100%;
+    letter-spacing: 0.05em;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@media (min-width: 768px) {
+    .app-book-btn {
+        font-size: 1.125rem;
+    }
+}
+
+/* .app-book-btn-title {
+    Base style inherits, customizable individually here
+} */
+
+.app-book-btn-chapters {
+    margin-left: 1rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-family: var(--font-story);
+    font-style: italic;
+    font-weight: normal;
+}
+
+/* Chapter Navigation Elements */
+.app-nav-btn {
+    padding: 0.5rem 0.75rem;
+    font-weight: bold;
+    font-size: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .app-nav-btn {
+        font-size: 0.875rem;
+    }
+}
+
+.app-nav-btn-locked {
+    color: #6b7280; /* Tailwind gray-500 equivalent */
+    border-color: #374151; /* Tailwind gray-700 equivalent */
+    background: transparent;
+    cursor: not-allowed;
+    text-transform: uppercase;
+}
+
+/* UI States */
+.app-story-error {
+    opacity: 0.5;
+    text-align: center;
+    font-family: var(--font-ui);
+    margin-top: 5rem;
+}
+
+.app-msg-loading, .app-msg-error, .app-msg-success {
+    padding: 1rem;
+    text-transform: uppercase;
+}
+
+.app-msg-loading {
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: var(--border-width) solid var(--text-color);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.app-msg-success {
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: var(--border-width) solid var(--text-color);
+}
+
+.app-msg-error {
+    background: var(--bg-color);
+    color: var(--accent-error);
+    border: var(--border-width) solid var(--accent-error);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}
+
+.app-qr-notice {
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    text-align: center;
+    border-bottom: 1px solid var(--text-muted);
+    padding-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+}
