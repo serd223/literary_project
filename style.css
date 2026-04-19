@@ -1,0 +1,147 @@
+/* 
+===================================================
+THEME CONFIGURATION
+===================================================
+Edit these variables to quickly change the look of the project.
+*/
+:root {
+    /* Colors */
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --text-muted: #aaaaaa;
+    --accent-error: #ff3333;
+    
+    /* Button Colors */
+    --button-bg: #000000;
+    --button-text: #ffffff;
+    --button-hover-bg: #ffffff;
+    --button-hover-text: #000000;
+
+    /* Typography */
+    --font-ui: 'Courier Prime', monospace;
+    --font-story: 'Playfair Display', serif;
+
+    /* App Design Variables */
+    --border-width: 2px;
+    --shadow-offset: 4px;
+    --transition-speed: 0.1s;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Anti-aliasing for crisper text on dark background */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.font-serif {
+    font-family: var(--font-story);
+}
+
+.font-mono {
+    font-family: var(--font-ui);
+}
+
+/* Typography & Links */
+h1 {
+    color: var(--text-color);
+}
+
+/* App Buttons & Borders */
+.app-button {
+    border: var(--border-width) solid var(--text-color);
+    background: var(--button-bg);
+    color: var(--button-text);
+    text-transform: uppercase;
+    transition: all var(--transition-speed) ease;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--text-color);
+}
+
+.app-button:hover:not(:disabled) {
+    background: var(--button-hover-bg);
+    color: var(--button-hover-text);
+    transform: translate(2px, 2px);
+    box-shadow: calc(var(--shadow-offset) - 2px) calc(var(--shadow-offset) - 2px) 0px 0px var(--text-color);
+    cursor: pointer;
+}
+
+.app-button:active:not(:disabled),
+.app-button-active {
+    transform: translate(var(--shadow-offset), var(--shadow-offset));
+    box-shadow: 0px 0px 0px 0px var(--text-color) !important;
+    background: var(--button-hover-bg) !important;
+    color: var(--button-hover-text) !important;
+}
+
+.app-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--text-color);
+}
+
+.app-border {
+    border: var(--border-width) solid var(--text-color);
+}
+
+.app-error-border {
+    border: var(--border-width) solid var(--accent-error);
+    color: var(--accent-error);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--accent-error);
+}
+
+/* Story container typography */
+#story-container {
+    /* Smooth fade in */
+    animation: fadeIn 1s ease-in-out;
+    color: var(--text-color); 
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#story-container p {
+    margin-bottom: 2rem;
+    line-height: 1.8;
+    font-size: 1.25rem;
+    text-align: left;
+}
+
+/* QR Context */
+#qr-container img {
+    margin: 0 auto;
+    display: inline-block;
+}
+
+/* Structural Element Overrides (to rely on variables instead of Tailwind utility hardcodes) */
+header {
+    border-bottom: var(--border-width) solid var(--text-color) !important;
+}
+
+footer#actions {
+    border-top: var(--border-width) solid var(--text-color) !important;
+}
+
+#qr-wrapper p {
+    border-bottom: 1px solid var(--text-muted);
+    color: var(--text-muted);
+}
+
+/* System Messages Overrides */
+#messages > div {
+    /* Base style for messages inherited from tailwind but enforcing border widths */
+    border-width: var(--border-width);
+}

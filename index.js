@@ -7,6 +7,7 @@ let currentChapter = 1;
 let unlockedChapters = [1];
 let myUUID = null;
 let receivedSources = [];
+let sessionLocation = null;
 
 const LOCAL_STORAGE_KEY = `proximitetext_${CONFIG.bookName}`;
 const UUID_KEY = `proximitetext_uuid_${CONFIG.bookName}`;
@@ -98,7 +99,18 @@ const init = async () => {
     // Request geolocation permission upfront so the browser prompts the user
     // before we need it, rather than deep inside the receive flow.
     await new Promise((resolve) => {
-        navigator.geolocation.getCurrentPosition(resolve, resolve, { maximumAge: 60000, timeout: 10000 });
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                sessionLocation = position;
+                resolve();
+            },
+            (err) => {
+                console.warn("Geolocation failed on init", err);
+                alert("Location extraction failed! You will not be able to transmit or receive new chapters until location permissions are granted and the page is refreshed.\n\nError: " + err.message);
+                resolve();
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+        );
     });
 
     // Check if page loaded via QR Scan (checking URL params)
@@ -129,16 +141,13 @@ const renderNav = () => {
         btn.innerText = `[ CHAPTER ${i} ]`;
 
         if (unlockedChapters.includes(i)) {
-            btn.className = `px-3 py-2 font-bold brutalist-button text-xs md:text-sm`;
+            btn.className = `px-3 py-2 font-bold app-button text-xs md:text-sm`;
             if (i === currentChapter) {
-                btn.style.background = 'var(--text-color)';
-                btn.style.color = 'var(--bg-color)';
-                btn.style.boxShadow = 'none';
-                btn.style.transform = 'translate(4px, 4px)';
+                btn.classList.add('app-button-active');
             }
             btn.onclick = () => loadChapter(i);
         } else {
-            btn.className = `px-3 py-2 brutalist-border text-xs md:text-sm text-gray-500 border-gray-700 bg-transparent cursor-not-allowed uppercase`;
+            btn.className = `px-3 py-2 app-border text-xs md:text-sm text-gray-500 border-gray-700 bg-transparent cursor-not-allowed uppercase`;
             btn.disabled = true;
         }
         els.chapterNav.appendChild(btn);
@@ -239,24 +248,15 @@ const handleTransmit = () => {
     els.transmitBtn.innerText = "Acquiring Coordinates...";
     els.transmitBtn.disabled = true;
 
-    if (!navigator.geolocation) {
+    if (!navigator.geolocation || !sessionLocation) {
         showMessage('error', "Your interface lacks spatial awareness capabilities. Transmission failed.");
         resetTransmitBtn(nextChapter);
         return;
     }
 
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            generateQR(lat, lng, nextChapter);
-        },
-        (err) => {
-            showMessage('error', "Interference detected. Unable to lock geographical coordinates.");
-            resetTransmitBtn(nextChapter);
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
-    );
+    const lat = sessionLocation.coords.latitude;
+    const lng = sessionLocation.coords.longitude;
+    generateQR(lat, lng, nextChapter);
 };
 
 const resetTransmitBtn = (nextChapter) => {
@@ -326,45 +326,34 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
     }
 
     // Ask for location to verify proximity
-    if (!navigator.geolocation) {
-        showMessage('error', "Your interface lacks spatial awareness capabilities. Cannot confirm proximity.");
+    if (!navigator.geolocation || !sessionLocation) {
+        showMessage('error', "Your interface lacks spatial awareness capabilities. Cannot confirm proximity. You must reveal your location.");
         cleanUrlParams();
         renderNav();
         await loadChapter(Math.max(...unlockedChapters));
         return;
     }
 
-    navigator.geolocation.getCurrentPosition(
-        async (position) => {
-            const currentLat = position.coords.latitude;
-            const currentLng = position.coords.longitude;
+    const currentLat = sessionLocation.coords.latitude;
+    const currentLng = sessionLocation.coords.longitude;
 
-            const distance = calculateDistance(currentLat, currentLng, targetLat, targetLng);
+    const distance = calculateDistance(currentLat, currentLng, targetLat, targetLng);
 
-            if (distance <= 50) {
-                unlockedChapters.push(targetChapter);
-                receivedSources.push(targetUuid);
-                saveState();
-                showMessage('success', "Proximity confirmed. Decryption sequence initiated. New chapter acquired.");
-            } else {
-                showMessage('error', `You are too far from the source (${Math.round(distance)}m). The text requires physical proximity (within 50m) to a carrier.`);
-            }
+    if (distance <= 100) {
+        unlockedChapters.push(targetChapter);
+        receivedSources.push(targetUuid);
+        saveState();
+        showMessage('success', "Proximity confirmed. Decryption sequence initiated. New chapter acquired.");
+    } else {
+        showMessage('error', `You are too far from the source (${Math.round(distance)}m). The text requires physical proximity (within 100m) to a carrier.`);
+    }
 
-            cleanUrlParams();
-            renderNav();
+    cleanUrlParams();
+    renderNav();
 
-            // Load the newly unlocked chapter, or highest fallback
-            const chapterToLoad = unlockedChapters.includes(targetChapter) ? targetChapter : Math.max(...unlockedChapters);
-            await loadChapter(chapterToLoad);
-        },
-        async (err) => {
-            showMessage('error', "Carrier signal lost. You must reveal your location to receive the transmission.");
-            cleanUrlParams();
-            renderNav();
-            await loadChapter(Math.max(...unlockedChapters));
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
-    );
+    // Load the newly unlocked chapter, or highest fallback
+    const chapterToLoad = unlockedChapters.includes(targetChapter) ? targetChapter : Math.max(...unlockedChapters);
+    await loadChapter(chapterToLoad);
 };
 
 /**
