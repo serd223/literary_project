@@ -155,7 +155,7 @@ const init = async () => {
     document.getElementById('project-title-intro').innerText = CONFIG.projectTitle;
 
     if (CONFIG.main_colors) {
-        applyColors(CONFIG.main_colors.bg_color, CONFIG.main_colors.text_color);
+        applyTheme(CONFIG.main_colors);
     }
 
     // Setup events
@@ -204,9 +204,17 @@ const init = async () => {
  * UI RENDERING
  * ==========================================
  */
-const applyColors = (bgColor, textColor) => {
-    if (bgColor) document.documentElement.style.setProperty('--bg-color', bgColor);
-    if (textColor) document.documentElement.style.setProperty('--text-color', textColor);
+const applyTheme = (config) => {
+    if (config.bg_color) document.documentElement.style.setProperty('--bg-color', config.bg_color);
+    if (config.text_color) document.documentElement.style.setProperty('--text-color', config.text_color);
+    
+    if (config.bg_image_url) {
+        document.documentElement.style.setProperty('--bg-image', `url('${config.bg_image_url}')`);
+        document.documentElement.style.setProperty('--bg-blur', config.bg_image_blur || '5px');
+    } else {
+        document.documentElement.style.setProperty('--bg-image', 'none');
+        document.documentElement.style.setProperty('--bg-blur', '0px');
+    }
 };
 
 const renderNav = () => {
@@ -277,7 +285,7 @@ const loadSubtext = async (subtextNum) => {
     els.subtextTitle.innerText = CONFIG.subtexts[subtextNum].subtextTitle;
     
     const subtextConfig = CONFIG.subtexts[subtextNum];
-    applyColors(subtextConfig.bg_color, subtextConfig.text_color);
+    applyTheme(subtextConfig);
 
     renderNav();
     showMessage('loading');

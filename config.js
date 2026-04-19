@@ -16,6 +16,7 @@ const CONFIG = {
             authorName: "Zelal Sara Aslan",
             authorAge: 17,
             authorTag: "High School",
+            bg_image_url: "https://i.pinimg.com/1200x/d9/95/21/d995213d13be510e45107f92a44f0697.jpg",
             bg_color: "#FFEE99",
             text_color: "#000000"
         },
@@ -25,6 +26,7 @@ const CONFIG = {
             authorName: "Naz Tekin",
             authorAge: 21,
             authorTag: "Tourist Guiding",
+            bg_image_url: null,
             bg_color: "#D7E0B3",
             text_color: "#000000"
         },
@@ -34,6 +36,7 @@ const CONFIG = {
             authorName: "Sıla Ergin",
             authorAge: 21,
             authorTag: "American Culture and Literature",
+            bg_image_url: null,
             bg_color: "#98A9BD",
             text_color: "#000000"
         },
@@ -43,6 +46,7 @@ const CONFIG = {
             authorName: "Halil Emre Sayar",
             authorAge: 22,
             authorTag: "Electrical and Electronics Engineering",
+            bg_image_url: null,
             bg_color: "#380B2F",
             text_color: "#FFFFFF"
         },
@@ -52,6 +56,7 @@ const CONFIG = {
             authorName: "İlhan Bozacıoğlu",
             authorAge: 23,
             authorTag: "Molecular Biology and Genetics",
+            bg_image_url: null,
             bg_color: "#C6C9CD",
             text_color: "#000000"
         },
@@ -61,6 +66,7 @@ const CONFIG = {
             authorName: "Utku Berk Yılmaz",
             authorAge: 21,
             authorTag: "Sociology",
+            bg_image_url: null,
             bg_color: "#DEB3A6",
             text_color: "#000000"
         }

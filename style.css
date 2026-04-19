@@ -45,6 +45,23 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+body::before {
+    content: "";
+    position: fixed;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    background-image: var(--bg-image, none);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(var(--bg-blur, 0px));
+    z-index: -1;
+    pointer-events: none;
+    transition: background-image 0.5s ease-in-out;
+}
+
 /* Typography & Links */
 h1 {
     color: var(--text-color);
