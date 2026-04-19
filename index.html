@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Proximate Text</title>
+    <title>AKE Project</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -72,6 +72,32 @@
                 </div>
             </div>
         </footer>
+    </div>
+
+    <!-- LOCATION OVERLAY -->
+    <div id="location-overlay"
+        class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-6 text-white text-center font-mono">
+        <!-- Background element overriding Tailwind opacity constraints if needed, or just standard bg -->
+        <div class="absolute inset-0 bg-black opacity-95"></div>
+
+        <div class="relative z-10 flex flex-col items-center">
+            <h2 class="text-2xl md:text-3xl font-bold mb-4 uppercase tracking-widest">Sensors Offline</h2>
+            <p class="mb-8 max-w-md font-serif text-lg md:text-xl text-gray-300">
+                This frequency requires spatial awareness (Location Access) to synchronize. Provide clearance to
+                transmit or receive new chapters.
+            </p>
+            <div class="flex flex-col gap-4 w-full max-w-sm">
+                <button id="grant-location-btn" class="px-6 py-4 font-bold text-lg app-button tracking-wider w-full">
+                    Grant Location
+                </button>
+                <button id="dismiss-location-btn"
+                    class="px-6 py-3 text-sm app-border bg-transparent text-gray-400 transition-colors uppercase cursor-pointer hover:border-white hover:text-white w-full tracking-widest">
+                    Read Unlocked Chapters
+                </button>
+            </div>
+            <div id="location-error-text"
+                class="mt-8 text-[var(--accent-error)] text-sm max-w-md uppercase font-bold hidden"></div>
+        </div>
     </div>
 
     <!-- MAIN LOGIC -->

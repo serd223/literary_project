@@ -73,7 +73,11 @@ const els = {
     transmitBtn: document.getElementById('transmit-btn'),
     qrWrapper: document.getElementById('qr-wrapper'),
     qrcode: document.getElementById('qrcode'),
-    closeQrBtn: document.getElementById('close-qr-btn')
+    closeQrBtn: document.getElementById('close-qr-btn'),
+    locationOverlay: document.getElementById('location-overlay'),
+    grantLocationBtn: document.getElementById('grant-location-btn'),
+    dismissLocationBtn: document.getElementById('dismiss-location-btn'),
+    locationErrorText: document.getElementById('location-error-text')
 };
 
 /**
@@ -81,6 +85,48 @@ const els = {
  * INITIALIZATION
  * ==========================================
  */
+const requestLocationWithOverlay = async () => {
+    return new Promise((resolve) => {
+        els.locationOverlay.classList.remove('hidden');
+        els.locationOverlay.classList.add('flex');
+
+        function cleanup() {
+            els.grantLocationBtn.removeEventListener('click', onGrantLocation);
+            els.dismissLocationBtn.removeEventListener('click', onDismiss);
+        }
+
+        function onGrantLocation() {
+            els.grantLocationBtn.innerText = "Acquiring...";
+            els.grantLocationBtn.disabled = true;
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    sessionLocation = position;
+                    els.locationOverlay.classList.add('hidden');
+                    els.locationOverlay.classList.remove('flex');
+                    cleanup();
+                    resolve();
+                },
+                (err) => {
+                    els.locationErrorText.innerText = "Error: " + err.message + " - Check your browser site settings.";
+                    els.locationErrorText.classList.remove('hidden');
+                    els.grantLocationBtn.innerText = "Grant Location";
+                    els.grantLocationBtn.disabled = false;
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+            );
+        }
+
+        function onDismiss() {
+            els.locationOverlay.classList.add('hidden');
+            els.locationOverlay.classList.remove('flex');
+            cleanup();
+            resolve();
+        }
+
+        els.grantLocationBtn.addEventListener('click', onGrantLocation);
+        els.dismissLocationBtn.addEventListener('click', onDismiss);
+    });
+};
 const init = async () => {
     // Setup title
     els.bookTitle.innerText = CONFIG.bookName.replace(/_/g, ' ');
@@ -104,9 +150,9 @@ const init = async () => {
                 sessionLocation = position;
                 resolve();
             },
-            (err) => {
+            async (err) => {
                 console.warn("Geolocation failed on init", err);
-                alert("Location extraction failed! You will not be able to transmit or receive new chapters until location permissions are granted and the page is refreshed.\n\nError: " + err.message);
+                await requestLocationWithOverlay();
                 resolve();
             },
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
