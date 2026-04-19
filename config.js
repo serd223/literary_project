@@ -29,8 +29,8 @@ const CONFIG = {
             text_color: "#000000"
         },
         {
-            subtextTitle: "Here or There",
-            filepath: "resources/here_or_there.txt",
+            subtextTitle: "Hiraeth",
+            filepath: "resources/hiraeth.txt",
             authorName: "Sıla Ergin",
             authorAge: 21,
             authorTag: "American Culture and Literature",
