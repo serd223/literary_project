@@ -353,15 +353,19 @@ const generateQR = (lat, lng, subtext) => {
     url.searchParams.set('unlock', subtext.toString());
     url.searchParams.set('uuid', myUUID);
 
-    // Render QR Code (Overriden to B&W specifically as per Reading View thematic constraints)
+    // Render QR Code 
     els.qrcode.innerHTML = '';
     
+    const rootStyle = getComputedStyle(document.documentElement);
+    const qRThemeBg = rootStyle.getPropertyValue('--bg-color').trim() || "#ffffff";
+    const qRThemeText = rootStyle.getPropertyValue('--text-color').trim() || "#000000";
+
     new QRCode(els.qrcode, {
         text: url.toString(),
         width: 256,
         height: 256,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
+        colorDark: qRThemeText,
+        colorLight: qRThemeBg,
         correctLevel: QRCode.CorrectLevel.H
     });
 

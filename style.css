@@ -143,34 +143,34 @@ footer#actions {
 
 /* Reading View Monochromatic Override */
 #reading-view .app-button {
-    background: var(--reading-view-bg) !important;
-    color: var(--reading-view-color) !important;
-    border-color: var(--reading-view-color) !important;
-    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--reading-view-color) !important;
+    background: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--text-color) !important;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--text-color) !important;
 }
 
 #reading-view .app-button:hover:not(:disabled) {
-    background: var(--reading-view-color) !important;
-    color: var(--reading-view-bg) !important;
-    box-shadow: calc(var(--shadow-offset) - 2px) calc(var(--shadow-offset) - 2px) 0px 0px var(--reading-view-color) !important;
+    background: var(--text-color) !important;
+    color: var(--bg-color) !important;
+    box-shadow: calc(var(--shadow-offset) - 2px) calc(var(--shadow-offset) - 2px) 0px 0px var(--text-color) !important;
 }
 
 #reading-view .app-button-active {
-    background: var(--reading-view-color) !important;
-    color: var(--reading-view-bg) !important;
-    box-shadow: 0px 0px 0px 0px var(--reading-view-color) !important;
+    background: var(--text-color) !important;
+    color: var(--bg-color) !important;
+    box-shadow: 0px 0px 0px 0px var(--text-color) !important;
 }
 
 #reading-view header {
-    border-bottom-color: var(--reading-view-color) !important;
+    border-bottom-color: var(--text-color) !important;
 }
 
 #reading-view footer#actions {
-    border-top-color: var(--reading-view-color) !important;
+    border-top-color: var(--text-color) !important;
 }
 
 #reading-view .app-border {
-    border-color: var(--reading-view-color) !important;
+    border-color: var(--text-color) !important;
 }
 
 #reading-view .app-nav-btn-locked {
