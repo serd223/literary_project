@@ -3,8 +3,8 @@
  * APPLICATION STATE
  * ==========================================
  */
-let currentChapter = 1;
-let unlockedChapters = [1];
+let currentSubtext = 1;
+let unlockedSubtexts = [1];
 let myUUID = null;
 let receivedSources = [];
 let sessionLocation = null;
@@ -24,13 +24,13 @@ const loadState = () => {
     const saved = localStorage.getItem(DATA_KEY);
     if (saved) {
         try {
-            unlockedChapters = JSON.parse(saved);
-            if (!Array.isArray(unlockedChapters)) unlockedChapters = [1];
+            unlockedSubtexts = JSON.parse(saved);
+            if (!Array.isArray(unlockedSubtexts)) unlockedSubtexts = [1];
         } catch (e) {
-            unlockedChapters = [1];
+            unlockedSubtexts = [1];
         }
     } else {
-        unlockedChapters = [1];
+        unlockedSubtexts = [1];
     }
 
     myUUID = localStorage.getItem(UUID_KEY);
@@ -56,11 +56,9 @@ const loadState = () => {
 };
 
 const saveState = () => {
-    localStorage.setItem(DATA_KEY, JSON.stringify(unlockedChapters));
+    localStorage.setItem(DATA_KEY, JSON.stringify(unlockedSubtexts));
     localStorage.setItem(SOURCES_KEY, JSON.stringify(receivedSources));
 };
-
-// Removed initBookStorage as we now manage a single dimensional state
 
 /**
  * ==========================================
@@ -68,8 +66,8 @@ const saveState = () => {
  * ==========================================
  */
 const els = {
-    bookTitle: document.getElementById('book-title'),
-    chapterNav: document.getElementById('chapter-nav'),
+    textTitle: document.getElementById('text-title'),
+    subtextNav: document.getElementById('subtext-nav'),
     storyContainer: document.getElementById('story-container'),
     loading: document.getElementById('loading'),
     error: document.getElementById('error'),
@@ -87,7 +85,7 @@ const els = {
     welcomeView: document.getElementById('welcome-view'),
     continueBtn: document.getElementById('continue-btn'),
     readingView: document.getElementById('reading-view'),
-    chapterTitle: document.getElementById('chapter-title')
+    subtextTitle: document.getElementById('subtext-title')
 };
 
 /**
@@ -138,14 +136,14 @@ const requestLocationWithOverlay = async () => {
     });
 };
 const showReadingView = async () => {
-    els.chapterTitle.innerText = CONFIG.chapters[Math.max(...unlockedChapters) - 1].chapterTitle;
+    els.subtextTitle.innerText = CONFIG.subtexts[Math.max(...unlockedSubtexts) - 1].subtextTitle;
     els.welcomeView.classList.add('hidden');
     els.welcomeView.classList.remove('flex');
     els.readingView.classList.remove('hidden');
     els.readingView.classList.add('flex');
 
     renderNav();
-    await loadChapter(Math.max(...unlockedChapters));
+    await loadSubtext(Math.max(...unlockedSubtexts));
 };
 
 const init = async () => {
@@ -188,7 +186,7 @@ const init = async () => {
     const unlock = parseInt(urlParams.get('unlock'));
     const uuid = urlParams.get('uuid');
 
-    // If QR code is scanned and points to valid book
+    // If QR code is scanned and points to valid target
     if (lat !== null && lng !== null && !isNaN(unlock) && uuid !== null) {
         await showReadingView();
         await handleReceive(parseFloat(lat), parseFloat(lng), unlock, uuid);
@@ -201,31 +199,31 @@ const init = async () => {
  * ==========================================
  */
 const renderNav = () => {
-    els.chapterNav.innerHTML = '';
-    for (let i = 1; i <= CONFIG.chapters.length; i++) {
+    els.subtextNav.innerHTML = '';
+    for (let i = 1; i <= CONFIG.subtexts.length; i++) {
         const btn = document.createElement('button');
-        btn.innerText = `[ CHAPTER ${i} ]`;
+        btn.innerText = `[ SUBTEXT ${i} ]`;
 
-        if (unlockedChapters.includes(i)) {
+        if (unlockedSubtexts.includes(i)) {
             btn.className = `app-button app-nav-btn`;
-            if (i === currentChapter) {
+            if (i === currentSubtext) {
                 btn.classList.add('app-button-active');
             }
-            btn.onclick = () => loadChapter(i);
+            btn.onclick = () => loadSubtext(i);
         } else {
             btn.className = `app-border app-nav-btn app-nav-btn-locked`;
             btn.disabled = true;
         }
-        els.chapterNav.appendChild(btn);
+        els.subtextNav.appendChild(btn);
     }
 
     // Share mechanics
-    if (currentChapter < CONFIG.chapters.length) {
+    if (currentSubtext < CONFIG.subtexts.length) {
         els.actions.classList.remove('hidden');
         els.transmitBtn.classList.remove('hidden');
         els.qrWrapper.classList.add('hidden');
         els.qrWrapper.classList.remove('flex');
-        els.transmitBtn.innerText = `Transmit Chapter ${currentChapter + 1}`;
+        els.transmitBtn.innerText = `Transmit Subtext ${currentSubtext + 1}`;
     } else {
         els.actions.classList.add('hidden');
     }
@@ -262,9 +260,9 @@ const showMessage = (type, text = '') => {
  * CONTENT FETCHING
  * ==========================================
  */
-const loadChapter = async (chapterNum) => {
-    currentChapter = chapterNum;
-    els.chapterTitle.innerText = CONFIG.chapters[chapterNum - 1].chapterTitle;
+const loadSubtext = async (subtextNum) => {
+    currentSubtext = subtextNum;
+    els.subtextTitle.innerText = CONFIG.subtexts[subtextNum - 1].subtextTitle;
     renderNav();
     showMessage('loading');
     els.storyContainer.innerHTML = '';
@@ -272,7 +270,7 @@ const loadChapter = async (chapterNum) => {
 
     try {
         // Dynamically fetch text file
-        const filepath = CONFIG.chapters[chapterNum - 1].filepath;
+        const filepath = CONFIG.subtexts[subtextNum - 1].filepath;
         const response = await fetch(filepath);
 
         if (!response.ok) {
@@ -291,13 +289,13 @@ const loadChapter = async (chapterNum) => {
         els.storyContainer.innerHTML = html;
         showMessage('none');
 
-        if (chapterNum < CONFIG.chapters.length) {
+        if (subtextNum < CONFIG.subtexts.length) {
             els.actions.classList.remove('hidden');
         }
     } catch (err) {
         showMessage('error', `Data extraction failed. The requested sequence could not be located in the void. \n\n[ ${err.message} ]`);
         els.storyContainer.innerHTML = '<p class="app-story-error">[ STATIC NOISE ]</p>';
-        if (chapterNum < CONFIG.chapters.length) {
+        if (subtextNum < CONFIG.subtexts.length) {
             els.actions.classList.remove('hidden');
         }
     }
@@ -309,29 +307,29 @@ const loadChapter = async (chapterNum) => {
  * ==========================================
  */
 const handleTransmit = () => {
-    const nextChapter = currentChapter + 1;
-    if (nextChapter > CONFIG.chapters.length) return;
+    const nextSubtext = currentSubtext + 1;
+    if (nextSubtext > CONFIG.subtexts.length) return;
 
     els.transmitBtn.innerText = "Acquiring Coordinates...";
     els.transmitBtn.disabled = true;
 
     if (!navigator.geolocation || !sessionLocation) {
         showMessage('error', "Your interface lacks spatial awareness capabilities. Transmission failed.");
-        resetTransmitBtn(nextChapter);
+        resetTransmitBtn(nextSubtext);
         return;
     }
 
     const lat = sessionLocation.coords.latitude;
     const lng = sessionLocation.coords.longitude;
-    generateQR(lat, lng, nextChapter);
+    generateQR(lat, lng, nextSubtext);
 };
 
-const resetTransmitBtn = (nextChapter) => {
-    els.transmitBtn.innerText = `Transmit Chapter ${nextChapter}`;
+const resetTransmitBtn = (nextSubtext) => {
+    els.transmitBtn.innerText = `Transmit Subtext ${nextSubtext}`;
     els.transmitBtn.disabled = false;
 };
 
-const generateQR = (lat, lng, chapter) => {
+const generateQR = (lat, lng, subtext) => {
     // Reconstruct absolute URL to prevent trailing slash/hash issues on varied static hosts like GH Pages
     const baseUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
     const url = new URL(baseUrl);
@@ -339,7 +337,7 @@ const generateQR = (lat, lng, chapter) => {
     // Build strictly encoded payload
     url.searchParams.set('lat', lat.toString());
     url.searchParams.set('lng', lng.toString());
-    url.searchParams.set('unlock', chapter.toString());
+    url.searchParams.set('unlock', subtext.toString());
     url.searchParams.set('uuid', myUUID);
 
     // Render QR Code
@@ -357,7 +355,7 @@ const generateQR = (lat, lng, chapter) => {
     els.transmitBtn.classList.add('hidden');
     els.qrWrapper.classList.remove('hidden');
     els.qrWrapper.classList.add('flex');
-    resetTransmitBtn(chapter);
+    resetTransmitBtn(subtext);
 };
 
 /**
@@ -365,18 +363,18 @@ const generateQR = (lat, lng, chapter) => {
  * RECEIVE (SCAN)
  * ==========================================
  */
-const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) => {
+const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) => {
     showMessage('loading');
 
-    const unlocked = unlockedChapters;
-    // const sources = receivedSources[bookName];
+    const unlocked = unlockedSubtexts;
+    // const sources = receivedSources[textName];
     const sources = receivedSources;
 
     // Already unlocked? Just load it and clean URL.
-    if (unlocked.includes(targetChapter)) {
+    if (unlocked.includes(targetSubtext)) {
         cleanUrlParams();
         renderNav();
-        await loadChapter(targetChapter);
+        await loadSubtext(targetSubtext);
         return;
     }
 
@@ -384,7 +382,7 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
         showMessage('error', "Signal rejected. You cannot scan your own carrier signal.");
         cleanUrlParams();
         renderNav();
-        await loadChapter(Math.max(...unlocked));
+        await loadSubtext(Math.max(...unlocked));
         return;
     }
 
@@ -392,7 +390,7 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
         showMessage('error', "Signal rejected. You have already extracted data from this specific carrier. Seek a new source.");
         cleanUrlParams();
         renderNav();
-        await loadChapter(Math.max(...unlocked));
+        await loadSubtext(Math.max(...unlocked));
         return;
     }
 
@@ -401,7 +399,7 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
         showMessage('error', "Your interface lacks spatial awareness capabilities. Cannot confirm proximity. You must reveal your location.");
         cleanUrlParams();
         renderNav();
-        await loadChapter(Math.max(...unlocked));
+        await loadSubtext(Math.max(...unlocked));
         return;
     }
 
@@ -411,11 +409,11 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
     const distance = calculateDistance(currentLat, currentLng, targetLat, targetLng);
 
     if (distance <= 100) {
-        unlockedChapters.push(targetChapter);
-        // receivedSources[bookName].push(targetUuid);
+        unlockedSubtexts.push(targetSubtext);
+        // receivedSources[textName].push(targetUuid);
         receivedSources.push(targetUuid);
         saveState();
-        showMessage('success', "Proximity confirmed. Decryption sequence initiated. New chapter acquired.");
+        showMessage('success', "Proximity confirmed. Decryption sequence initiated. New subtext acquired.");
     } else {
         showMessage('error', `You are too far from the source (${Math.round(distance)}m). The text requires physical proximity (within 100m) to a carrier.`);
     }
@@ -423,9 +421,9 @@ const handleReceive = async (targetLat, targetLng, targetChapter, targetUuid) =>
     cleanUrlParams();
     renderNav();
 
-    // Load the newly unlocked chapter, or highest fallback
-    const chapterToLoad = unlockedChapters.includes(targetChapter) ? targetChapter : Math.max(...unlockedChapters);
-    await loadChapter(chapterToLoad);
+    // Load the newly unlocked subtext, or highest fallback
+    const subtextToLoad = unlockedSubtexts.includes(targetSubtext) ? targetSubtext : Math.max(...unlockedSubtexts);
+    await loadSubtext(subtextToLoad);
 };
 
 /**

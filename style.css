@@ -146,8 +146,8 @@ footer#actions {
     border-width: var(--border-width);
 }
 
-/* Book Selector Elements */
-.app-book-btn {
+/* Text Selector Elements */
+.app-text-btn {
     padding: 1rem 1.5rem;
     font-weight: bold;
     font-size: 1rem;
@@ -160,16 +160,16 @@ footer#actions {
 }
 
 @media (min-width: 768px) {
-    .app-book-btn {
+    .app-text-btn {
         font-size: 1.125rem;
     }
 }
 
-/* .app-book-btn-title {
+/* .app-text-btn-title {
     Base style inherits, customizable individually here
 } */
 
-.app-book-btn-chapters {
+.app-text-btn-subtexts {
     margin-left: 1rem;
     font-size: 0.875rem;
     color: var(--text-muted);
@@ -178,7 +178,7 @@ footer#actions {
     font-weight: normal;
 }
 
-/* Chapter Navigation Elements */
+/* Subtext Navigation Elements */
 .app-nav-btn {
     padding: 0.5rem 0.75rem;
     font-weight: bold;

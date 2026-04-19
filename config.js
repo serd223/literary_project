@@ -1,22 +1,21 @@
 /**
  * ==========================================
  * CONFIGURATION
- * ==========================================
- * Edit this file to add new books or chapters
+ * Edit this file to add new texts or subtexts
  */
 const CONFIG = {
     projectTitle: "Central Text",
-    chapters: [
+    subtexts: [
         {
-            chapterTitle: "Yellow",
+            subtextTitle: "Yellow",
             filepath: "resources/yellow.txt"
         },
         {
-            chapterTitle: "Here or There",
+            subtextTitle: "Here or There",
             filepath: "resources/here_or_there.txt"
         },
         {
-            chapterTitle: "Turn and Look at the World",
+            subtextTitle: "Turn and Look at the World",
             filepath: "resources/turn_and_look_at_the_world.txt"
         }
     ]
