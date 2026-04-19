@@ -283,7 +283,7 @@ footer#actions {
     margin-bottom: 1.5rem;
     font-size: 0.875rem;
     text-align: center;
-    border-bottom: 1px solid var(--text-muted);
+    border-bottom: 1px solid var(--text-color);
     padding-bottom: 0.5rem;
     letter-spacing: 0.1em;
     color: var(--text-muted);
