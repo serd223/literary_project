@@ -470,8 +470,9 @@ const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) =>
 
     let finalErrorMsg = null;
     let finalSuccessMsg = null;
+    const maxDistanceThreshold = 50;
 
-    if (distance <= 30) {
+    if (distance <= maxDistanceThreshold) {
         unlockedSubtexts.push(targetSubtext);
         // receivedSources[textName].push(targetUuid);
         receivedSources.push(targetUuid);
