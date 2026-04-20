@@ -208,7 +208,7 @@ const applyTheme = (config) => {
     if (config.bg_color) document.documentElement.style.setProperty('--bg-color', config.bg_color);
     if (config.text_color) {
         document.documentElement.style.setProperty('--text-color', config.text_color);
-        
+
         let brightness = 0;
         let hex = config.text_color.replace('#', '');
         if (hex.length === 8) hex = hex.substring(0, 6);
@@ -219,7 +219,7 @@ const applyTheme = (config) => {
             const b = parseInt(hex.substring(4, 6), 16);
             brightness = (r * 299 + g * 587 + b * 114) / 1000;
         }
-        
+
         if (brightness > 128) {
             document.documentElement.style.setProperty('--knockout-blend', 'screen');
             document.documentElement.style.setProperty('--knockout-color', '#000000');
@@ -228,7 +228,7 @@ const applyTheme = (config) => {
             document.documentElement.style.setProperty('--knockout-color', '#ffffff');
         }
     }
-    
+
     if (config.bg_image_url) {
         document.documentElement.style.setProperty('--bg-image', `url('${config.bg_image_url}')`);
         document.documentElement.style.setProperty('--bg-blur', config.bg_image_blur || '5px');
@@ -304,7 +304,7 @@ const showMessage = (type, text = '') => {
 const loadSubtext = async (subtextNum) => {
     currentSubtext = subtextNum;
     els.subtextTitle.innerText = CONFIG.subtexts[subtextNum].subtextTitle;
-    
+
     const subtextConfig = CONFIG.subtexts[subtextNum];
     applyTheme(subtextConfig);
 
@@ -389,7 +389,7 @@ const generateQR = (lat, lng, subtext) => {
 
     // Render QR Code 
     els.qrcode.innerHTML = '';
-    
+
     const rootStyle = getComputedStyle(document.documentElement);
     const qRThemeBg = rootStyle.getPropertyValue('--bg-color').trim() || "#ffffff";
     const qRThemeText = rootStyle.getPropertyValue('--text-color').trim() || "#000000";
@@ -422,6 +422,14 @@ const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) =>
     // const sources = receivedSources[textName];
     const sources = receivedSources;
 
+    if (isNaN(targetSubtext) || !targetUuid) {
+        cleanUrlParams();
+        renderNav();
+        await loadSubtext(Math.max(...unlockedSubtexts));
+        showMessage('error', "Invalid transmission data. The signal was corrupted.");
+        return;
+    }
+
     // Already unlocked? Just load it and clean URL.
     if (unlocked.includes(targetSubtext)) {
         cleanUrlParams();
@@ -431,27 +439,27 @@ const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) =>
     }
 
     if (targetUuid === myUUID) {
-        showMessage('error', "You can not transmit to yourself, you need to receive it from another person.");
         cleanUrlParams();
         renderNav();
-        await loadSubtext(Math.max(...unlocked));
+        await loadSubtext(Math.max(...unlockedSubtexts));
+        showMessage('error', "You can not transmit to yourself, you need to receive it from another person.");
         return;
     }
 
     if (sources.includes(targetUuid)) {
-        showMessage('error', "You had already received a chapter from this device, please try a new one.");
         cleanUrlParams();
         renderNav();
-        await loadSubtext(Math.max(...unlocked));
+        await loadSubtext(Math.max(...unlockedSubtexts));
+        showMessage('error', "You had already received a chapter from this device, please try a new one.");
         return;
     }
 
     // Ask for location to verify proximity
     if (!navigator.geolocation || !sessionLocation) {
-        showMessage('error', "Receival is not available without location access.");
         cleanUrlParams();
         renderNav();
-        await loadSubtext(Math.max(...unlocked));
+        await loadSubtext(Math.max(...unlockedSubtexts));
+        showMessage('error', "Receival is not available without location access.");
         return;
     }
 
@@ -460,14 +468,17 @@ const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) =>
 
     const distance = calculateDistance(currentLat, currentLng, targetLat, targetLng);
 
+    let finalErrorMsg = null;
+    let finalSuccessMsg = null;
+
     if (distance <= 30) {
         unlockedSubtexts.push(targetSubtext);
         // receivedSources[textName].push(targetUuid);
         receivedSources.push(targetUuid);
         saveState();
-        // showMessage('success', "Proximity confirmed. Decryption sequence initiated. New subtext acquired.");
+        finalSuccessMsg = `${CONFIG.subtexts[targetSubtext].subtextTitle} has been unlocked.`;
     } else {
-        showMessage('error', "You are too far away from the transmitter, you need to get closer.");
+        finalErrorMsg = "You are too far away from the transmitter, you need to get closer.";
     }
 
     cleanUrlParams();
@@ -476,6 +487,9 @@ const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) =>
     // Load the newly unlocked subtext, or highest fallback
     const subtextToLoad = unlockedSubtexts.includes(targetSubtext) ? targetSubtext : Math.max(...unlockedSubtexts);
     await loadSubtext(subtextToLoad);
+
+    if (finalErrorMsg) showMessage('error', finalErrorMsg);
+    if (finalSuccessMsg) showMessage('success', finalSuccessMsg);
 };
 
 /**
