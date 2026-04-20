@@ -336,13 +336,13 @@ const loadSubtext = async (subtextNum) => {
         els.storyContainer.innerHTML = html + authorHtml;
         showMessage('none');
 
-        if (subtextNum < CONFIG.subtexts.length) {
+        if (subtextNum + 1 < CONFIG.subtexts.length) {
             els.actions.classList.remove('hidden');
         }
     } catch (err) {
         // showMessage('error', `Data extraction failed. The requested sequence could not be located in the void. \n\n[ ${err.message} ]`);
         // els.storyContainer.innerHTML = '<p class="app-story-error">[ STATIC NOISE ]</p>';
-        if (subtextNum < CONFIG.subtexts.length) {
+        if (subtextNum + 1 < CONFIG.subtexts.length) {
             els.actions.classList.remove('hidden');
         }
     }
