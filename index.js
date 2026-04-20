@@ -122,7 +122,7 @@ const requestLocationWithOverlay = async () => {
                     els.grantLocationBtn.innerText = "Grant Location";
                     els.grantLocationBtn.disabled = false;
                 },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 }
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
             );
         }
 
