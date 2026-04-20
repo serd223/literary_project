@@ -28,6 +28,7 @@ const CONFIG = {
             authorAge: 21,
             authorTag: "Tourist Guiding",
             bg_image_url: "resources/backgrounds/scissors.jpg",
+            bg_image_blur: "12px",
             bg_color: "#D7E0B3",
             text_color: "#000000"
         },
@@ -39,7 +40,7 @@ const CONFIG = {
             authorTag: "American Culture and Literature",
             bg_image_url: "resources/backgrounds/hiraeth.jpg",
             bg_color: "#98A9BD",
-            text_color: "#000000"
+            text_color: "#FFFFFF"
         },
         {
             subtextTitle: "Dark Opera",
@@ -68,6 +69,7 @@ const CONFIG = {
             authorAge: 21,
             authorTag: "Sociology",
             bg_image_url: "resources/backgrounds/collective_loneliness.jpg",
+            bg_image_blur: "13px",
             bg_color: "#DEB3A6",
             text_color: "#000000"
         }
