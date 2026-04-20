@@ -168,6 +168,17 @@ const init = async () => {
 
     els.continueBtn.addEventListener('click', showReadingView);
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const lat = urlParams.get('lat');
+    const lng = urlParams.get('lng');
+    const unlock = parseInt(urlParams.get('unlock'));
+    const uuid = urlParams.get('uuid');
+    // TODO: remove
+    const debugUnlockAll = urlParams.get('debugunlockall');
+    const debugClearState = urlParams.get('debugclearstate');
+
+    handleDebugParams(debugUnlockAll, debugClearState);
+
     // Request geolocation permission upfront so the browser prompts the user
     // before we need it, rather than deep inside the receive flow.
     await new Promise((resolve) => {
@@ -185,23 +196,10 @@ const init = async () => {
         );
     });
 
-    // Check if page loaded via QR Scan (checking URL params)
-    const urlParams = new URLSearchParams(window.location.search);
-    const lat = urlParams.get('lat');
-    const lng = urlParams.get('lng');
-    const unlock = parseInt(urlParams.get('unlock'));
-    const uuid = urlParams.get('uuid');
-    // TODO: remove
-    const debugUnlockAll = urlParams.get('debugunlockall');
-    const debugClearState = urlParams.get('debugclearstate');
-
     // If QR code is scanned and points to valid target
     if (lat !== null && lng !== null && !isNaN(unlock) && uuid !== null) {
         await showReadingView();
         await handleReceive(parseFloat(lat), parseFloat(lng), unlock, uuid);
-    } else {
-        // TODO: remove
-        handleDebugParams(debugUnlockAll, debugClearState);
     }
 
 };
