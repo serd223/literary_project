@@ -191,13 +191,34 @@ const init = async () => {
     const lng = urlParams.get('lng');
     const unlock = parseInt(urlParams.get('unlock'));
     const uuid = urlParams.get('uuid');
+    // TODO: remove
+    const debugUnlockAll = urlParams.get('debugunlockall');
+    const debugClearState = urlParams.get('debugclearstate');
 
     // If QR code is scanned and points to valid target
     if (lat !== null && lng !== null && !isNaN(unlock) && uuid !== null) {
         await showReadingView();
         await handleReceive(parseFloat(lat), parseFloat(lng), unlock, uuid);
+    } else {
+        // TODO: remove
+        handleDebugParams(debugUnlockAll, debugClearState);
     }
+
 };
+
+// TODO: remove
+const handleDebugParams = (unlockAll, clearState) => {
+        if (unlockAll !== null) {
+            unlockedSubtexts = [0, 1, 2, 3, 4, 5];
+            saveState();
+        }
+
+        if (clearState !== null) {
+            unlockedSubtexts = [0];
+            receivedSources = [];
+            saveState();
+        }
+}
 
 /**
  * ==========================================
