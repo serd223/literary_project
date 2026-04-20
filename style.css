@@ -295,22 +295,22 @@ footer#actions {
 }
 
 .app-msg-loading {
-    background: var(--bg-color);
+    background: transparent;
     color: var(--text-color);
     border: var(--border-width) solid var(--text-color);
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .app-msg-success {
-    background: var(--bg-color);
+    background: transparent;
     color: var(--text-color);
     border: var(--border-width) solid var(--text-color);
 }
 
 .app-msg-error {
-    background: var(--bg-color);
-    color: var(--accent-error);
-    border: var(--border-width) solid var(--accent-error);
+    background: transparent;
+    color: var(--text-color);
+    border: var(--border-width) solid var(--text-color);
 }
 
 @keyframes pulse {
