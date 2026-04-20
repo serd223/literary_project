@@ -498,7 +498,7 @@ const handleReceive = async (targetLat, targetLng, targetSubtext, targetUuid) =>
         saveState();
         finalSuccessMsg = `${CONFIG.subtexts[targetSubtext].subtextTitle} has been unlocked.`;
     } else {
-        finalErrorMsg = "You are too far away from the transmitter, you need to get closer.";
+        finalErrorMsg = `You are too far away from the transmitter, you need to get closer. DEBUG INFO: distance=${distance};userCoords=${currentLat},${currentLng};targetCoords=${targetLat},${targetLng}`;
     }
 
     cleanUrlParams();
