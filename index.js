@@ -179,6 +179,20 @@ const init = async () => {
 
     handleDebugParams(debugUnlockAll, debugClearState);
 
+    const isReceiving = lat !== null && lng !== null && !isNaN(unlock) && uuid !== null;
+
+    if (isReceiving) {
+        els.welcomeView.classList.add('hidden');
+        els.welcomeView.classList.remove('flex');
+        els.readingView.classList.remove('hidden');
+        els.readingView.classList.add('flex');
+        els.storyContainer.innerHTML = '';
+        els.subtextNav.innerHTML = '';
+        els.subtextTitle.innerText = 'Loading chapter...';
+        els.loading.innerText = 'Acquiring geolocation information...';
+        showMessage('loading');
+    }
+
     // Request geolocation permission upfront so the browser prompts the user
     // before we need it, rather than deep inside the receive flow.
     await new Promise((resolve) => {
@@ -197,8 +211,7 @@ const init = async () => {
     });
 
     // If QR code is scanned and points to valid target
-    if (lat !== null && lng !== null && !isNaN(unlock) && uuid !== null) {
-        await showReadingView();
+    if (isReceiving) {
         await handleReceive(parseFloat(lat), parseFloat(lng), unlock, uuid);
     }
 
@@ -206,6 +219,7 @@ const init = async () => {
 
 // TODO: remove
 const handleDebugParams = (unlockAll, clearState) => {
+    cleanUrlParams();
     if (unlockAll !== null) {
         unlockedSubtexts = [0, 1, 2, 3, 4, 5];
         saveState();
