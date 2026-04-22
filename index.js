@@ -206,16 +206,16 @@ const init = async () => {
 
 // TODO: remove
 const handleDebugParams = (unlockAll, clearState) => {
-        if (unlockAll !== null) {
-            unlockedSubtexts = [0, 1, 2, 3, 4, 5];
-            saveState();
-        }
+    if (unlockAll !== null) {
+        unlockedSubtexts = [0, 1, 2, 3, 4, 5];
+        saveState();
+    }
 
-        if (clearState !== null) {
-            unlockedSubtexts = [0];
-            receivedSources = [];
-            saveState();
-        }
+    if (clearState !== null) {
+        unlockedSubtexts = [0];
+        receivedSources = [];
+        saveState();
+    }
 }
 
 /**
@@ -333,15 +333,7 @@ const loadSubtext = async (subtextNum) => {
     els.actions.classList.add('hidden'); // Hide actions while loading
 
     try {
-        // Dynamically fetch text file
-        const filepath = CONFIG.subtexts[subtextNum].filepath;
-        const response = await fetch(filepath);
-
-        if (!response.ok) {
-            throw new Error(`Signal lost (HTTP ${response.status}). Path: ${filepath}`);
-        }
-
-        const text = await response.text();
+        const text = CONFIG.subtexts[subtextNum].textContent;
 
         // Parse text: Split by newlines, wrap in <p>
         const html = text
