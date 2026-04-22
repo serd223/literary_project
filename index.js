@@ -263,7 +263,12 @@ const applyTheme = (config) => {
     }
 
     if (config.bg_image_url) {
-        document.documentElement.style.setProperty('--bg-image', `url('${config.bg_image_url}')`);
+        const base_image_url = config.bg_image_url;
+        const timestamp = `?t=${new Date().getTime()}`;
+        // TODO: reenable caching
+        const image_url = base_image_url + timestamp;
+        // const image_url = base_image_url;
+        document.documentElement.style.setProperty('--bg-image', `url('${image_url}')`);
         document.documentElement.style.setProperty('--bg-blur', config.bg_image_blur || '5px');
     } else {
         document.documentElement.style.setProperty('--bg-image', 'none');
