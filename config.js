@@ -21,7 +21,8 @@ I love making people laugh, I love glittery stuff, I love talking nonstop. Do th
             authorName: "Zelal Sara Aslan",
             authorAge: 17,
             authorTag: "High School",
-            bg_image_url: "resources/backgrounds/yellow.jpg",
+            bg_image_url: "https://lh3.googleusercontent.com/u/0/d/18J7_LbGi49a1N1dRPGgJ91droD-pmkY3",
+            // bg_image_url: "resources/backgrounds/yellow.jpg",
             bg_image_blur: "10px",
             bg_color: "#FFEE99",
             text_color: "#000000"
@@ -40,7 +41,8 @@ When I opened my eyes again without a veil, there was no hunger or nausea in my 
             authorName: "Naz Tekin",
             authorAge: 21,
             authorTag: "Tourist Guiding",
-            bg_image_url: "resources/backgrounds/scissors.jpg",
+            bg_image_url: "https://lh3.googleusercontent.com/u/0/d/1lmlcHWy5vxyYQsO3--ZxrUvYxrqFFKim",
+            // bg_image_url: "resources/backgrounds/scissors.jpg",
             bg_image_blur: "12px",
             bg_color: "#D7E0B3",
             text_color: "#000000"
@@ -76,7 +78,8 @@ Sorry for disturbing you, but you do have an important exam ahead of you. Just a
             authorName: "Sıla Ergin",
             authorAge: 21,
             authorTag: "American Culture and Literature",
-            bg_image_url: "resources/backgrounds/hiraeth.jpg",
+            bg_image_url: "https://lh3.googleusercontent.com/u/0/d/1GEBXqeyREqJtCoqkyHp3yAUEHmhJUQzS",
+            // bg_image_url: "resources/backgrounds/hiraeth.jpg",
             bg_color: "#98A9BD",
             text_color: "#FFFFFF"
         },
@@ -95,7 +98,8 @@ The colors of my orchestra are gray; I strike my instruments with my harshest to
             authorName: "Halil Emre Sayar",
             authorAge: 22,
             authorTag: "Electrical and Electronics Engineering",
-            bg_image_url: "resources/backgrounds/dark_opera.jpg",
+            bg_image_url: "https://lh3.googleusercontent.com/u/0/d/1dDvG2RV8Jjg6OOcKv0XIhxo5C_5shTE3",
+            // bg_image_url: "resources/backgrounds/dark_opera.jpg",
             bg_color: "#380B2F",
             text_color: "#FFFFFF"
         },
@@ -111,7 +115,8 @@ I feel myself coming to peace. In my ears, a familiar melody echoes: “Dön bak
             authorName: "İlhan Bozacıoğlu",
             authorAge: 23,
             authorTag: "Molecular Biology and Genetics",
-            bg_image_url: "resources/backgrounds/turn_around_and_look_at_the_world.jpg",
+            bg_image_url: "https://lh3.googleusercontent.com/u/0/d/1H2O3lTHDzlPxy6w0LL-KdKygyodlM44o",
+            // bg_image_url: "resources/backgrounds/turn_around_and_look_at_the_world.jpg",
             bg_color: "#C6C9CD",
             text_color: "#000000"
         },
@@ -125,7 +130,8 @@ That is why knowing that someone else is thinking the exact same things right no
             authorName: "Utku Berk Yılmaz",
             authorAge: 21,
             authorTag: "Sociology",
-            bg_image_url: "resources/backgrounds/collective_loneliness.jpg",
+            bg_image_url: "https://lh3.googleusercontent.com/u/0/d/1x2ijmys84j34lBnO0mYHZs8EoiF2nODU",
+            // bg_image_url: "resources/backgrounds/collective_loneliness.jpg",
             bg_image_blur: "13px",
             bg_color: "#DEB3A6",
             text_color: "#000000"
