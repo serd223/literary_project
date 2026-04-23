@@ -134,7 +134,7 @@ That is why knowing that someone else is thinking the exact same things right no
             // bg_image_url: "resources/backgrounds/collective_loneliness.jpg",
             bg_image_blur: "13px",
             bg_color: "#DEB3A6",
-            text_color: "#000000"
+            text_color: "#FFFFFF"
         }
     ]
 };
