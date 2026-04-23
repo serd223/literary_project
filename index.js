@@ -152,7 +152,7 @@ const init = async () => {
     // Restore progress
     loadState();
 
-    document.getElementById('project-title-intro').innerText = CONFIG.projectTitle;
+    // document.getElementById('project-title-intro').innerText = CONFIG.projectTitle;
 
     if (CONFIG.main_colors) {
         applyTheme(CONFIG.main_colors);
