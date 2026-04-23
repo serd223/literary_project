@@ -253,9 +253,9 @@ footer#actions {
     cursor: not-allowed;
 }
 
-/* Custom Thematic Overrides */
+/* Custom Thematic Overrides TODO: use css variables instead of hardcoded constant */
 .app-text-regular {
-    color: var(--text-color);
+    color: #E8D1A7;
 }
 
 .app-text-muted {
