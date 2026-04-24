@@ -221,7 +221,7 @@ const init = async () => {
 const handleDebugParams = (unlockAll, clearState) => {
     cleanUrlParams();
     if (unlockAll !== null) {
-        unlockedSubtexts = [0, 1, 2, 3, 4, 5];
+        unlockedSubtexts = [0, 1, 2, 3, 4, 5, 6];
         saveState();
     }
 

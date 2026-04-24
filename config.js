@@ -78,6 +78,18 @@ const CONFIG = {
             bg_image_blur: "13px",
             bg_color: "#DEB3A6",
             text_color: "#FFFFFF"
+        },
+        {
+            subtextTitle: "The Fig Tree",
+            textContent: the_fig_tree_text,
+            authorName: "Elifnur Bölükbaş",
+            authorAge: 20,
+            authorTag: "American Culture and Literature",
+            bg_image_url: "https://lh3.googleusercontent.com/u/0/d/1ch8g1jpyZSlDb3j0VnF5hM5ZODqw4IHe",
+            // bg_image_url: "resources/backgrounds/the_fig_tree.jpg",
+            bg_image_blur: "12px",
+            bg_color: "#DEB3A6",
+            text_color: "#000000"
         }
     ]
 };
